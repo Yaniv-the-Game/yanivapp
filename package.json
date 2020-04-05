@@ -1,0 +1,18 @@
+{
+  "name": "yanivapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Yaniv-the-Game/yanivapp.git",
+  "author": "Yaniv the Game team",
+  "license": "MIT",
+  "dependencies": {
+    "next": "^9.3.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.0",
+    "@types/react": "^16.9.32",
+    "typescript": "^3.8.3"
+  }
+}
