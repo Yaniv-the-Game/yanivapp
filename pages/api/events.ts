@@ -10,14 +10,17 @@ declare module 'http' {
 
 export default async function eventsHandler(req: NextApiRequest, res: NextApiResponse) {
   // TODO check grip signature (req.headers['grip-sig'])
+
   if (req.headers['content-type'] !== 'application/websocket-events') {
-    // handle correctly
+    res.writeHead(400, {
+      'Content-Type': 'text/plain'
+    });
+    res.write('Invalid content type');
+    res.end();
     return
   }
 
-  const body = await text(req)
-
-  const events = decodeWebSocketEvents(body);
+  const events = decodeWebSocketEvents(req.body);
   const connectionId = req.headers['connection-id'];
   const meta = {};
 
