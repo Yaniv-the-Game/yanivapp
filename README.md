@@ -32,24 +32,34 @@ There is 2 ways to reduce points
 Start `pushpin` in background mode,
 the proxy that transforms websocket connections to plain
 HTTP requests for us to handle in `pages/api/events.ts`.
+You'll need [Docker Desktop](https://www.docker.com/products/docker-desktop)
+for that.
 
 ```
 docker-compose up -d
 ```
 
-Install all project dependencies using `yarn`.
+Install all project dependencies using `yarn`. See how to install
+it [on its website](https://classic.yarnpkg.com/en/docs/install/).
 
 ```
 yarn install
 ```
 
-Start the project.
+Start the project using the development mode of `now`.
+It can [easily be installed](https://zeit.co/download) through `yarn`.
 
 ```
-yarn dev
+now dev
 ```
 
 ## Deploy
 
 As soon as a feature is merged on `master`, it will automatically deploy
 to [yanivapp.now.sh](https://yanivapp.now.sh).
+
+You can also deploy manually by typing `now` while you're in the project directory.
+
+## License
+
+MIT

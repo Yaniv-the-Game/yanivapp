@@ -23,6 +23,7 @@
     "@types/node": "^13.11.0",
     "@types/react": "^16.9.32",
     "babel-plugin-inline-react-svg": "^1.1.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "yarn": "^1.22.4"
   }
 }
