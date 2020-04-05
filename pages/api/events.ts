@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { decodeWebSocketEvents, encodeWebSocketEvents, WebSocketEvent, WebSocketContext, PubControlItem } from 'grip'
 import { Item } from 'pubcontrol';
-import { validateSig, GripPubControl, WebSocketMessageFormat } from 'grip';
+import { GripPubControl, WebSocketMessageFormat } from 'grip';
 
 // Pushpin control publisher, through which we publish messages to websocket clients
 const pub = new GripPubControl({ control_uri: 'http://localhost:6561' })
