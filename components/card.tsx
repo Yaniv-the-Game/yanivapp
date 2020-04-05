@@ -1,6 +1,5 @@
 import React from 'react'
 import B1 from './cards/b1.svg'
-import C10 from './cards/c10.svg'
 import C2 from './cards/c2.svg'
 import C3 from './cards/c3.svg'
 import C4 from './cards/c4.svg'
@@ -13,7 +12,7 @@ import CA from './cards/ca.svg'
 import CJ from './cards/cj.svg'
 import CK from './cards/ck.svg'
 import CQ from './cards/cq.svg'
-import H10 from './cards/h10.svg'
+import CX from './cards/cx.svg'
 import H2 from './cards/h2.svg'
 import H3 from './cards/h3.svg'
 import H4 from './cards/h4.svg'
@@ -26,9 +25,9 @@ import HA from './cards/ha.svg'
 import HJ from './cards/hj.svg'
 import HK from './cards/hk.svg'
 import HQ from './cards/hq.svg'
+import HX from './cards/hx.svg'
 import J1 from './cards/j1.svg'
 import J2 from './cards/j2.svg'
-import P10 from './cards/p10.svg'
 import P2 from './cards/p2.svg'
 import P3 from './cards/p3.svg'
 import P4 from './cards/p4.svg'
@@ -41,7 +40,7 @@ import PA from './cards/pa.svg'
 import PJ from './cards/pj.svg'
 import PK from './cards/pk.svg'
 import PQ from './cards/pq.svg'
-import T10 from './cards/t10.svg'
+import PX from './cards/px.svg'
 import T2 from './cards/t2.svg'
 import T3 from './cards/t3.svg'
 import T4 from './cards/t4.svg'
@@ -54,10 +53,10 @@ import TA from './cards/ta.svg'
 import TJ from './cards/tj.svg'
 import TK from './cards/tk.svg'
 import TQ from './cards/tq.svg'
+import TX from './cards/tx.svg'
 
 const cards = {
   B1,
-  C10,
   C2,
   C3,
   C4,
@@ -70,7 +69,7 @@ const cards = {
   CJ,
   CK,
   CQ,
-  H10,
+  CX,
   H2,
   H3,
   H4,
@@ -83,9 +82,9 @@ const cards = {
   HJ,
   HK,
   HQ,
+  HX,
   J1,
   J2,
-  P10,
   P2,
   P3,
   P4,
@@ -98,7 +97,7 @@ const cards = {
   PJ,
   PK,
   PQ,
-  T10,
+  PX,
   T2,
   T3,
   T4,
@@ -111,6 +110,7 @@ const cards = {
   TJ,
   TK,
   TQ,
+  TX,
 }
 
 export default function Card({ type }) {

@@ -3668,7 +3668,7 @@ prr@~1.0.1:
   resolved "https://registry.yarnpkg.com/prr/-/prr-1.0.1.tgz#d3fc114ba06995a45ec6893f484ceb1d78f5f476"
   integrity sha1-0/wRS6BplaRexok/SEzrHXj19HY=
 
-pubcontrol@1.x:
+pubcontrol@1.x, pubcontrol@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/pubcontrol/-/pubcontrol-1.3.0.tgz#33b1e395e6eb7c455cce1f7326d0e6e76d6eecfc"
   integrity sha512-cDYZgthXSC2MZlB0gG1xMEln+z9MtqiGJh8+eSxsTM44v8yujRD7dn9nfY31gkM0maFi9pura+QeFKhyls6uXA==
