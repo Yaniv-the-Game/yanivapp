@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  pushpin:
+    image: "fanout/pushpin:1.26.0-2"
+    hostname: pushpin
+    ports:
+      - "8999:7999"
+      - "6560-6563:5560-5563"
+    volumes:
+      - ./pushpin.routes:/etc/pushpin/routes
