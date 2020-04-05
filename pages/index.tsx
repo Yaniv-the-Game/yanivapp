@@ -14,14 +14,6 @@ export default function IndexPage({ eventsUri }) {
   )
 }
 
-// export const getStaticProps: GetStaticProps = async context => {
-//   // ...
-// }
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   // ...
-// }
-
 export const getServerSideProps: GetServerSideProps = async context => {
   const eventsUri = process.env.PUSHPIN_REALM_URI || 'ws://localhost:8999/api/events'
 
