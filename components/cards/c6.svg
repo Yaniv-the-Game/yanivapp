@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 242 340">
+  <rect width="242" height="340" rx="20" fill="#fff"/>
+  <path d="M146 271.226L163.5 289l17.5-17.774-17.5-17.773zM58 271.226L75.5 289 93 271.226l-17.5-17.773zM58 171.226L75.5 189 93 171.226l-17.5-17.773zM146 171.226L163.5 189l17.5-17.774-17.5-17.773zM146 71.226L163.5 89 181 71.226l-17.5-17.773zM58 71.226L75.5 89 93 71.226 75.5 53.453zM14 72.883l11.111 11.228 11.111-11.228-11.111-11.228zM205.778 268.772L216.889 280 228 268.772l-11.111-11.228z" fill="#db362a"/>
+  <text transform="translate(10 32)" fill="#db362a" font-size="20" font-family="Helvetica">
+    <tspan x="0" y="15">6</tspan>
+  </text>
+  <g>
+    <text transform="rotate(180 114 155)" fill="#db362a" font-size="20" font-family="Helvetica">
+      <tspan x="0" y="15">6</tspan>
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 242 340">
+  <rect width="242" height="340" rx="20" fill="#fff"/>
+  <path d="M148 273.226L165.5 291l17.5-17.774-17.5-17.773zM60 273.226L77.5 291 95 273.226l-17.5-17.773zM148 73.226L165.5 91 183 73.226l-17.5-17.773zM62 71.226L79.5 89 97 71.226 79.5 53.453zM14 72.883l11.111 11.228 11.111-11.228-11.111-11.228zM205.778 268.772L216.889 280 228 268.772l-11.111-11.228z" fill="#db362a"/>
+  <text transform="translate(10 32)" fill="#db362a" font-size="20" font-family="Helvetica">
+    <tspan x="0" y="15">4</tspan>
+  </text>
+  <g>
+    <text transform="rotate(180 114 155)" fill="#db362a" font-size="20" font-family="Helvetica">
+      <tspan x="0" y="15">4</tspan>
+    </text>
+  </g>
+</svg>

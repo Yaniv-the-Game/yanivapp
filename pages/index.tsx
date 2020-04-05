@@ -1,10 +1,19 @@
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
+import Card from '../components/card'
+import { useYaniv } from '../hooks/yaniv'
 
 export default function IndexPage({ eventsUri }) {
+  const { counter, increment } = useYaniv({ eventsUri })
+
   return (
     <div className='index'>
       <h1>Hello Yaniv</h1>
-      <p>Will connect to {eventsUri}...</p>
+      <p>Connected to {eventsUri}...</p>
+      <p>Counter is {counter}</p>
+      <p><button onClick={increment}>Increment counter here</button></p>
+
+      <Card type="CA" />
+
       <style jsx>{`
         .index {
           color: #333;
