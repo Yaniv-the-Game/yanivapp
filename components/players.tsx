@@ -10,23 +10,92 @@ export default function Players({
   myHand: number,
 }) {
   return (
-    <div>
+    <div className='header'>
       {hands.map((hand, i) => (
         <div className='profile'>
-          <p>Hand {i + 1} {currentHand === i && '*'}</p>
-          <p>
-            {hand.map(card => (
-              <span>X</span>
-            ))}
-          </p>
+        <div className='cardIndicators'>
+          {hand.map(card => (
+            <div className='cardIndicator'>&nbsp;</div>
+          ))}
+        </div>
+        <div className="avatar">
+          <div className="avatarBackground"></div>
+          <div className="avatarForeground"></div>
+        </div>
+          <div>
+          <p>MYNAME</p>
+          {currentHand === i && (
+            <div className='activeUser'></div>
+          )}
+          </div>
         </div>
       ))}
       {currentHand === myHand && (
-        <p>it's your turn</p>
+        <div className='yourTurn'></div>
       )}
       <style jsx>{`
+        p{
+          margin:0px;
+          color:#FFF;
+        }
+        .header {
+          background: #A9C3A6;
+          width: 100%;
+          text-align:center;
+          padding-top:15px;
+        }
+        .cardIndicators{
+          margin:0;
+        }
+        .cardIndicator {
+          background: #FFFFFF;
+          min-width: 6px;
+          height: 9px;
+          border-radius:2px;
+          margin-right:2px;
+          display: inline-block;
+          line-height:0;
+        }
+        .avatar{
+          position:relative;
+          height:56px;
+        }
+        .avatarBackground{
+          background: RGBA(255,255,255,0.7);
+          height: 46px;
+          width: 46px;
+          position: absolute;
+          left: 50%;
+          margin-left: -23px;
+          top: 50%;
+          margin-top: -23px;
+          border-radius:60px;
+        }
+        .avatarForeground{
+          background: RGBA(25,190,255,0.7);
+          height: 56px;
+          width: 56px;
+          position: absolute;
+          left: 50%;
+          margin-left: -28px;
+          top: 50%;
+          margin-top: -28px;
+        }
+        .activeUser{
+          background: #FCFC1A;
+          width: 100%;
+          height:10px;
+          margin-bottom:15px;
+        }
+        .yourTurn{
+          background: #FCFC1A;
+          width: 100%;
+          height:20px;
+        }
         .profile {
           display: inline-block;
+          text-align:center;
+          margin-right:15px;
         }
       `}</style>
     </div>
