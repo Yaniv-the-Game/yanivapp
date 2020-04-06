@@ -4,12 +4,16 @@ import Router, { useRouter } from 'next/router'
 import Card from '../components/card'
 import { useMultiplayer } from '../hooks/multiplayer'
 import { useYaniv, deck, shuffle } from '../hooks/yaniv'
+import Players from '../components/players'
 
 export default function IndexPage({ baseUri, eventsUri }) {
   const joinRef = useRef<HTMLInputElement>()
   const nameRef = useRef<HTMLInputElement>()
 
   const { query: { game } } = useRouter()
+
+  const [myHand, setMyHand] = useState(0)
+  const [currentHand, setCurrentHand] = useState(0)
 
   const {
     hands,
@@ -79,9 +83,20 @@ export default function IndexPage({ baseUri, eventsUri }) {
       <p>
         <button onClick={turnUp}>turn up first card</button>
       </p>
-      <p>
 
+      <p>
+        <button onClick={() => setCurrentHand(0)}>Player 1</button>
+        <button onClick={() => setCurrentHand(1)}>Player 2</button>
+        <button onClick={() => setCurrentHand(2)}>Player 3</button>
+        <button onClick={() => setCurrentHand(3)}>Player 4</button>
       </p>
+
+      <Players hands={hands} currentHand={currentHand} myHand={myHand} />
+
+      {/* <Table />
+      <PlayButton onPlay={onPlay} />
+      <Hand /> */}
+
       <p>
         <button onClick={restock}>restock stack from old discard pile</button>
       </p>
@@ -89,7 +104,7 @@ export default function IndexPage({ baseUri, eventsUri }) {
       <dl>
         {hands.map((hand, i) => (
           <>
-            <dt>Hand {i + 1}</dt>
+            <dt>Hand {i + 1} {currentHand === i && '*'}</dt>
             <dd>
               {hand.map(card => (
                 <button
