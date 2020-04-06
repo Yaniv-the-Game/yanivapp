@@ -1,3 +1,5 @@
+![Build and Test](https://github.com/Yaniv-the-Game/yanivapp/workflows/Build%20and%20Test/badge.svg)
+
 # yanivapp
 
 > Playable instance of the massively popular Yaniv card game.
