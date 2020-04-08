@@ -30,6 +30,9 @@ export default function Avatar({
     case 'sandwich':
       n = "5";
       break;
+    case 'gipfeli':
+      n = "6";
+      break;
     default:
       n = "0";
       break;
