@@ -83,7 +83,8 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
       .map(({ card }) => card)
 
     play({ discards, draw: pile[0][0]})
-  }, [cardsToDiscard, play, pile])
+    setCardsToDiscard({})
+  }, [cardsToDiscard, setCardsToDiscard, play, pile])
 
   return (
     <div className='yaniv'>
@@ -130,7 +131,6 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           color: #333;
           max-height: 100vh;
           height: 100%;
-          overflow: hidden;
         }
 
         .setup {

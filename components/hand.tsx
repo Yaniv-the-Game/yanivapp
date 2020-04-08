@@ -34,10 +34,6 @@ export default function Hand({
       </div>
       <style jsx>{`
         .HandArea{
-          position:absolute;
-          bottom:0;
-          width:100%;
-          min-height:270px;
         }
 
         .cards{
