@@ -37,6 +37,8 @@ export function useMultiplayer({
           gameId,
           profiles: updated,
         }))
+
+        // TODO also send game state if client isn't synced anymore
       }
 
       return updated

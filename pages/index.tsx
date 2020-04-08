@@ -34,6 +34,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   const {
     hands,
     pile,
+    stack,
     setUp,
     turnUp,
     discardAndDraw,
@@ -71,10 +72,15 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   }, [start, profiles])
 
   const [cardsToDiscard, setCardsToDiscard] = useState({})
+  const [drawCard, setDrawCard] = useState(null)
 
   const onToggleCardToDiscard = useCallback((card: string) => {
     setCardsToDiscard(cards => ({ ...cards, [card]: !cards[card] }))
   }, [setCardsToDiscard])
+
+  const onToggleDrawCard = useCallback((card: string | null) => {
+    setDrawCard((drawCard) => drawCard !== card ? card : null)
+  }, [setDrawCard])
 
   const onPlay = useCallback(() => {
     const discards = Object.keys(cardsToDiscard)
@@ -82,9 +88,10 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
       .filter(({ active }) => active)
       .map(({ card }) => card)
 
-    play({ discards, draw: pile[0][0]})
+    play({ discards, draw: drawCard || stack[0]})
     setCardsToDiscard({})
-  }, [cardsToDiscard, setCardsToDiscard, play, pile])
+    setDrawCard(null)
+  }, [cardsToDiscard, setCardsToDiscard, stack, drawCard, setDrawCard, play, pile])
 
   return (
     <div className='yaniv'>
@@ -116,7 +123,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           currentProfileId={currentProfileId}
           myProfileId={profile.id}
         />
-        <Table pile={pile} />
+        <Table pile={pile} onToggleDrawCard={onToggleDrawCard} />
         <PlayButton onPlay={onPlay} />
         {hand && (
           <Hand
