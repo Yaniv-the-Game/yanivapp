@@ -1,17 +1,35 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
-import Router, { useRouter } from 'next/router'
+import { customAlphabet } from 'nanoid'
+import Router from 'next/router'
+import { CSSTransition } from 'react-transition-group'
+import createPersistedState from 'use-persisted-state';
 import Card from '../components/card'
 import { useMultiplayer } from '../hooks/multiplayer'
 import { useYaniv, deck, shuffle } from '../hooks/yaniv'
 import Players from '../components/players'
 import Hand from '../components/hand'
 
-export default function IndexPage({ baseUri, eventsUri }) {
+const useProfileState = createPersistedState('profile');
+
+const generateGameId = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 3)
+const generateProfileId = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 4)
+
+export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
+  const [profile, setProfile] = useProfileState({
+    id: generateProfileId(),
+    name: 'Muesli',
+    avatar: 'muesli',
+  });
+
   const joinRef = useRef<HTMLInputElement>()
   const nameRef = useRef<HTMLInputElement>()
 
-  const { query: { game } } = useRouter()
+  const [gameId, setGameId] = useState(initialGameId)
+
+  useEffect(() => {
+    Router.replace('/index', `/?game=${gameId}`, { shallow: true })
+  }, [gameId])
 
   const [myHand, setMyHand] = useState(0)
   const [currentHand, setCurrentHand] = useState(0)
@@ -26,15 +44,6 @@ export default function IndexPage({ baseUri, eventsUri }) {
     discardAndDraw,
   } = useYaniv()
 
-  const onSetUp = useCallback(() => {
-    let stack = shuffle(deck)
-    const hands = Array.from({ length: 4 }, x => stack.splice(0, 5))
-    console.log(hands)
-
-
-    setUp(hands, stack)
-  }, [setUp])
-
   const [discardCardsMap, setDiscardCardsMap] = useState<{ [card: string]: boolean }>({})
   const [drawCard, setDrawCard] = useState(null)
 
@@ -48,152 +57,108 @@ export default function IndexPage({ baseUri, eventsUri }) {
     setDrawCard(null)
   }, [discardAndDraw, discardCardsMap, drawCard, setDiscardCardsMap, setDrawCard])
 
-  const [currentCard, setCurrentCard] = useState('J1')
-
-  const [name, setName] = useState('bunny')
-  const { connected, gameId, counter, increment } = useMultiplayer({
+  const {
+    connected,
+    playing,
+    profiles,
+    start,
+  } = useMultiplayer({
     eventsUri,
-    gameId: game?.toString(),
-    name,
+    gameId: gameId,
+    me: profile,
+    // hands,
+    // pile,
+    // stack,
+    setUp,
+    turnUp,
+    // restock,
+    // discardAndDraw,
   })
 
-  // useEffect(() => {
-  //   Router.replace('/index', `/?game=${gameId}`, { shallow: true })
-  // }, [gameId])
+  const hand = useMemo(() => {
+    return hands[profiles.findIndex((p) => p.id === profile.id)]
+  }, [hands, profiles, profile])
 
-  const onJoin = useCallback(() => {
-    if (joinRef.current) {
-      Router.replace('/index', `/?game=${joinRef.current.value}`, { shallow: true })
-    }
-  }, [joinRef])
-
-  const onRename = useCallback(() => {
-    if (nameRef.current) {
-      setName(nameRef.current.value)
-    }
-  }, [nameRef, setName])
-
-
+  const onStart = useCallback(() => {
+    let stack = shuffle(deck)
+    const hands = profiles.map(() => stack.splice(0, 5))
+    start({ hands, stack })
+  }, [start, profiles])
 
   return (
-    <div className='index'>
-      <h1>Hello Yaniv</h1>
-
-      <h2>All about the magic game</h2>
-
-      <p>
-        <button onClick={onSetUp}>set up game for 4 players</button>
-      </p>
-      <p>
-        <button onClick={turnUp}>turn up first card</button>
-      </p>
-
-      <p>
-        <button onClick={() => setCurrentHand(0)}>Player 1</button>
-        <button onClick={() => setCurrentHand(1)}>Player 2</button>
-        <button onClick={() => setCurrentHand(2)}>Player 3</button>
-        <button onClick={() => setCurrentHand(3)}>Player 4</button>
-      </p>
-
-      <Players hands={hands} currentHand={currentHand} myHand={myHand} />
-      <Hand hands={hands} currentHand={currentHand} myHand={myHand} />
-      {/* <Table />
-      <PlayButton onPlay={onPlay} />
-       */}
-
-      <p>
-        <button onClick={restock}>restock stack from old discard pile</button>
-      </p>
-
-      <dl>
-        {hands.map((hand, i) => (
-          <>
-            <dt>Hand {i + 1} {currentHand === i && '*'}</dt>
-            <dd>
-              {hand.map(card => (
-                <button
-                  key={card}
-                  type="button"
-                  onClick={() => setDiscardCardsMap({ ...discardCardsMap, [card]: !discardCardsMap[card] })}
-                  className={discardCardsMap[card] && 'active'}
-                >
-                  {card}
-                </button>
-              ))}
-              <button type="button" onClick={() => onPlay(i)}>Play</button>
-            </dd>
-          </>
-        ))}
-        <dt>Stack</dt>
-        <dd>
-          {stack.map(card => (
-            <button
-              key={card}
-              type="button"
-              onClick={() => setDrawCard(card)}
-              className={drawCard === card && 'active'}
-            >
-              {card}
-            </button>
+    <div className='yaniv'>
+      <CSSTransition
+        in={!playing}
+        timeout={300}
+        mountOnEnter
+        unmountOnExit
+      >
+        <div className='setup'>
+          <h1>Yaniv {connected ? 'Online' : 'Offline'}</h1>
+          <p>Send your friends this link to join the game:</p>
+          <p>
+            <a className='gamelink' href={`https://yanivapp.now.sh/${gameId}`}>yanivapp.now.sh/{gameId}</a>
+          </p>
+          {profiles.map((p) => (
+            <li>{p.name} {p.id === profile.id && '<-- that is you'}</li>
           ))}
-        </dd>
-        {pile.map((level, i) => (
-          <>
-            <dt>Pile Level {i + 1}</dt>
-            <dd>
-              {level.map(card => (
-                <button
-                  key={card}
-                  type="button"
-                  onClick={() => setDrawCard(card)}
-                  className={drawCard === card && 'active'}
-                >
-                  {card}
-                </button>
-              ))}
-            </dd>
-          </>
-        ))}
-      </dl>
-
-      <h2>All about the multiplayer magic</h2>
-
-      <p>{connected ? 'Connected' : 'Not connected'} to {eventsUri}...</p>
-      <p>Your game <input ref={joinRef} type="text" defaultValue="u3hr3" /> <button onClick={onJoin}>join</button></p>
-      <p>Share {baseUri}/{game} for others to join.</p>
-      <p>You are <input ref={nameRef} type="text" defaultValue={name} /> <button onClick={onRename}>change</button></p>
-      <p>Counter is {counter}</p>
-      <p><button onClick={increment}>Increment counter here</button></p>
-
-      <h2>Check out these cool cards</h2>
-
-      <p>
-        {deck.map(card => (
-          <button type="button" onClick={() => setCurrentCard(card)}>{card}</button>
-        ))}
-      </p>
-
-      <Card type={currentCard} />
-
+          <button onClick={onStart}>begin</button>
+        </div>
+      </CSSTransition>
+      <div className='playground'>
+        <Players hands={hands} currentHand={currentHand} myHand={myHand} />
+        {/* <Table />
+          <PlayButton onPlay={onPlay} />
+        */}
+        {JSON.stringify(hand)}
+        <Hand hands={hands} currentHand={currentHand} myHand={myHand} />
+      </div>
       <style jsx>{`
-        .index {
+        .yaniv {
           color: #333;
+          max-height: 100vh;
+          height: 100%;
+          overflow: hidden;
         }
 
-        button.active {
-          color: mediumblue;
+        .setup {
+          color: white;
+          text-align: center;
+          background-color: #A9C3A6;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          transition: top 0.3s ease;
+        }
+
+        .setup.exit {
+          top: -100%;
+        }
+
+        .setup.enter {
+          top: -100%;
+        }
+
+        .setup .gamelink {
+          font-size: 30px;
+        }
+
+        .playground {
         }
       `}</style>
     </div>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
   const baseUri = `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
   const eventsUri = process.env.PUSHPIN_REALM_URI || 'ws://localhost:8999/api/events'
 
   return {
     props: {
+      initialGameId: query.game || generateGameId(),
       baseUri,
       eventsUri,
     }

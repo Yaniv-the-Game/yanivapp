@@ -3,19 +3,52 @@ import { useCallback, useEffect, useState, useRef } from 'react'
 export function useMultiplayer({
   eventsUri,
   gameId,
-  name,
+  me,
+  setUp,
+  turnUp,
 }: {
   eventsUri: string,
   gameId: string | null,
-  name: string,
+  me: {
+    id: string,
+    name: string,
+    avatar: string,
+  },
+  setUp: (hands: string[][], stack: string[]) => void,
+  turnUp: () => void,
 }) {
   const [connected, setConnected] = useState(false)
-  const [counter, setCounter] = useState(null)
+  const [playing, setPlaying] = useState(false)
   const socket = useRef<WebSocket>()
+  const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
 
-  const increment = useCallback(() => {
-    setCounter(counter + 1)
-  }, [counter, setCounter])
+  const onHello = useCallback(({ profile }) => {
+    setProfiles((profiles) => {
+      const updated = profiles.find(p => p.id === profile.id)
+        ? profiles.map(p => p.id === profile.id ? profile : p)
+        : [...profiles, profile]
+
+      if (me.id !== profile.id) {
+        socket.current?.send(JSON.stringify({
+          type: 'updateProfiles',
+          gameId,
+          profiles: updated,
+        }))
+      }
+
+      return updated
+    })
+  }, [setProfiles])
+
+  const onUpdateProfiles = useCallback(({ profiles }) => {
+    setProfiles(profiles)
+  }, [setProfiles])
+
+  const onStart = useCallback(({ profile, hands, stack }) => {
+    setUp(hands, stack)
+    turnUp()
+    setPlaying(true)
+  }, [setUp, turnUp, setPlaying])
 
   /**
    * connect through websocket and manage connection
@@ -32,7 +65,15 @@ export function useMultiplayer({
     webSocket.onerror = () => {
       setConnected(false)
     }
-    webSocket.onmessage = () => {
+    webSocket.onmessage = ({ data }) => {
+      const message = JSON.parse(data)
+
+      switch (message.type) {
+        case 'hello': onHello(message); break;
+        case 'updateProfiles': onUpdateProfiles(message); break;
+        case 'start': onStart(message); break;
+        default:
+      }
     }
     return () => {
       webSocket.close()
@@ -47,27 +88,34 @@ export function useMultiplayer({
     }
 
     socket.current?.send(JSON.stringify({
-      type: 'join',
-      gameId
-    }))
-  }, [connected, gameId])
-
-  useEffect(() => {
-    if (!connected) {
-      return
-    }
-
-    socket.current?.send(JSON.stringify({
-      type: 'rename',
+      type: 'hello',
       gameId,
-      name,
+      profile: me,
     }))
-  }, [connected, name])
+  }, [connected, me])
+
+  const start = useCallback(({
+    hands,
+    stack,
+  }: {
+    hands: string[][],
+    stack: string[]
+  }) => {
+    socket.current?.send(JSON.stringify({
+      type: 'start',
+      gameId,
+      profile: me,
+      hands,
+      stack,
+    }))
+  }, [])
 
   return {
     connected,
+    playing,
     gameId,
-    counter,
-    increment,
+    // hand,
+    profiles,
+    start,
   }
 }
