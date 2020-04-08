@@ -10,41 +10,26 @@ const pub = new GripPubControl({ control_uri: 'http://localhost:6561' })
 //
 
 const eventHandlers = {
-  // create a new game () => (game id, {seed}, subscription)
-  // join a game (game id, player name, avatar) => ({seed}, subscription)
-  //   --> joined (player id,  player name, avatar)
-  //   <-- sync (game id, counter)
-  // rename (game id, player id, player name, avatar) => ()
-  //   --> renamed (player id, player name, avatar)
-  // increment (game id, player id, amount) => ()
-  //   --> incremented (game id, player id, amount)
-
-  /**
-   * React to a newly joined user
-   */
-  async join({ gameId }: { gameId: string }, context: WebSocketContext) {
+  async hello({ gameId, profile }: { gameId: string, profile: { id: string, name: string, avatar: string } }, context: WebSocketContext) {
     context.subscribe(gameId)
 
     pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
-      type: 'joined',
+      type: 'hello',
+      profile,
     }))))
-
-    // pub.publish('all', new Item(new WebSocketMessageFormat(JSON.stringify({
-    //   jo: 'all',
-    //   jo2: 'all2',
-    // }))))
-    // context.send(JSON.stringify({
-    //   hello: 'world',
-    //   hello2: 'world',
-    // }))
   },
-  /**
-   * React to a newly joined user
-   */
-  async rename({ name, gameId }: { name: string, gameId: string }, context: WebSocketContext) {
+  async updateProfiles({ gameId, profiles }: { gameId: string, profiles: { id: string, name: string, avatar: string }[] }, context: WebSocketContext) {
     pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
-      type: 'renamed',
-      name
+      type: 'updateProfiles',
+      profiles,
+    }))))
+  },
+  async start({ gameId, profile, hands, stack }: { gameId: string, profile: { id: string, name: string, avatar: string }, hands: string[][], stack: string[] }, context: WebSocketContext) {
+    pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
+      type: 'start',
+      profile,
+      hands,
+      stack,
     }))))
 
     // pub.publish('all', new Item(new WebSocketMessageFormat(JSON.stringify({

@@ -110,8 +110,9 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         {/* <Table />
           <PlayButton onPlay={onPlay} />
         */}
-        {JSON.stringify(hand)}
-        <Hand hands={hands} currentHand={currentHand} myHand={myHand} />
+        {hand && (
+          <Hand hand={hand} />
+        )}
       </div>
       <style jsx>{`
         .yaniv {
