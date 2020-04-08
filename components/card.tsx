@@ -117,14 +117,6 @@ export default function Card({ type }) {
   const Image = cards[type] || 'div';
 
   return (
-    <div className='card'>
       <Image />
-      {type}
-      <style jsx>{`
-        .card {
-          border: 1px solid black;
-        }
-      `}</style>
-    </div>
   )
 }

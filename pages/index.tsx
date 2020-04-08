@@ -5,6 +5,7 @@ import Card from '../components/card'
 import { useMultiplayer } from '../hooks/multiplayer'
 import { useYaniv, deck, shuffle } from '../hooks/yaniv'
 import Players from '../components/players'
+import Hand from '../components/hand'
 
 export default function IndexPage({ baseUri, eventsUri }) {
   const joinRef = useRef<HTMLInputElement>()
@@ -29,6 +30,7 @@ export default function IndexPage({ baseUri, eventsUri }) {
     let stack = shuffle(deck)
     const hands = Array.from({ length: 4 }, x => stack.splice(0, 5))
     console.log(hands)
+
 
     setUp(hands, stack)
   }, [setUp])
@@ -71,6 +73,8 @@ export default function IndexPage({ baseUri, eventsUri }) {
     }
   }, [nameRef, setName])
 
+
+
   return (
     <div className='index'>
       <h1>Hello Yaniv</h1>
@@ -92,10 +96,10 @@ export default function IndexPage({ baseUri, eventsUri }) {
       </p>
 
       <Players hands={hands} currentHand={currentHand} myHand={myHand} />
-
+      <Hand hands={hands} currentHand={currentHand} myHand={myHand} />
       {/* <Table />
       <PlayButton onPlay={onPlay} />
-      <Hand /> */}
+       */}
 
       <p>
         <button onClick={restock}>restock stack from old discard pile</button>

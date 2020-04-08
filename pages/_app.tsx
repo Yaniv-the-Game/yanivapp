@@ -7,6 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <style jsx global>{`
         body {
           font-size: 18px;
+          background:rgba(240,240,240,1);
           @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
           font-family: 'Gloria Hallelujah', cursive;
         }
