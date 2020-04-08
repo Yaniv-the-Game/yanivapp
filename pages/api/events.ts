@@ -4,7 +4,11 @@ import { Item } from 'pubcontrol';
 import { GripPubControl, WebSocketMessageFormat } from 'grip';
 
 // Pushpin control publisher, through which we publish messages to websocket clients
-const pub = new GripPubControl({ control_uri: 'http://localhost:6561' })
+const pub = new GripPubControl({
+  control_uri: process.env.PUSHPIN_CONTROL_URI || 'http://localhost:6561',
+  control_iss: process.env.PUSHPIN_CONTROL_ISS,
+  key: process.env.PUSHPIN_CONTROL_KEY,
+})
 
 // game id => seed
 //

@@ -155,7 +155,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
 
 export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
   const baseUri = `${req.headers['x-forwarded-proto']}://${req.headers['x-forwarded-host']}`
-  const eventsUri = process.env.PUSHPIN_REALM_URI || 'ws://localhost:8999/api/events'
+  const eventsUri = process.env.EVENTS_WEBSOCKET_URI || 'ws://localhost:8999/api/events'
 
   return {
     props: {

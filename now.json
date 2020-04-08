@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "env": {
+    "EVENTS_WEBSOCKET_URI": "@events-websocket-uri",
+    "PUSHPIN_CONTROL_URI": "@pushpin-control-uri",
+    "PUSHPIN_CONTROL_ISS": "@pushpin-control-iss",
+    "PUSHPIN_CONTROL_KEY": "@pushpin-control-key"
+  },
+  "build": {
+    "env": {
+      "EVENTS_WEBSOCKET_URI": "@events-websocket-uri",
+      "PUSHPIN_CONTROL_URI": "@pushpin-control-uri",
+      "PUSHPIN_CONTROL_ISS": "@pushpin-control-iss",
+      "PUSHPIN_CONTROL_KEY": "@pushpin-control-key"
+    }
+  }
+}
