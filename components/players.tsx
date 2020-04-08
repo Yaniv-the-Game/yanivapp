@@ -10,6 +10,9 @@ export default function Players({
   currentHand: number,
   myHand: number,
 }) {
+
+// below will be replace with profile data
+const name = ['Pascal','David','Ladina','Andrea'];
   const currentAvatar = ['muesli','avocado','cookie','waffle'];
   const currentMood = 'good';
 
@@ -28,7 +31,7 @@ export default function Players({
           <div className="avatarForeground"><Avatar name={currentAvatar[i]} mood={currentMood} size={56}/></div>
         </div>
           <div>
-          <p>MYNAME</p>
+          <p>{name[i]}</p>
           {currentHand === i && (
             <div className='activeUser'></div>
           )}
@@ -48,6 +51,8 @@ export default function Players({
           width: 100%;
           text-align:center;
           padding-top:15px;
+          overflow: auto;
+          white-space: nowrap;
         }
         .cardIndicators{
           margin:0;
