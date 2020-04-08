@@ -3,27 +3,29 @@ import Card from '../components/card'
 
 export default function Hand({
   hand,
+  cardsToDiscard,
+  onToggleCardToDiscard,
 }: {
   hand: string[],
+  cardsToDiscard: { [card: string]: boolean },
+  onToggleCardToDiscard: (card: string) => void,
 }) {
   if (!hand) {
     return null
   }
 
-  let selectedToDiscard = ['J1','CK'];
-
   return (
     <div className="HandArea">
       <div className='selectedcards'>
-        {selectedToDiscard.map(card => (
-          <div className='card cardSVG selected' onClick={()=>{ alert("TODO if a user clicks a selectedcard, it should be removed from the 'selectedToDiscard' array (assuming this will trigger the array to be redrawn?)"); }}>
+        {hand.filter(card => cardsToDiscard[card]).map((card) => (
+          <div className='card cardSVG selected' onClick={() => onToggleCardToDiscard(card)}>
             <Card type={card} />
           </div>
         ))}
       </div>
       <div className='cards'>
-        {hand.map((card, index) => (
-          <div className='card' onClick={()=>{ alert("a) an 'active' class should be added to this card div. b) the card should get added to the 'selectedToDiscard' array"); }}>
+        {hand.map((card) => (
+          <div className='card cardSVG' onClick={() => onToggleCardToDiscard(card)}>
             <div className="cardSVG">
               <Card type={card} />
             </div>

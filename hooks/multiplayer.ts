@@ -89,7 +89,7 @@ export function useMultiplayer({
       socket.current = null
       setConnected(false)
     }
-  }, [eventsUri, socket, setConnected])
+  }, [eventsUri, socket, setConnected, socket, onPlay])
 
   useEffect(() => {
     if (!connected) {
@@ -101,13 +101,13 @@ export function useMultiplayer({
       gameId,
       profile: me,
     }))
-  }, [connected, me])
+  }, [connected, me, socket])
 
   const start = useCallback(({
     hands,
     stack,
   }: {
-    hands: string[][],
+    hands: { [profileId: string]: string[] },
     stack: string[]
   }) => {
     socket.current?.send(JSON.stringify({
@@ -117,7 +117,7 @@ export function useMultiplayer({
       hands,
       stack,
     }))
-  }, [])
+  }, [socket])
 
   const play = useCallback(({
     discards,
@@ -133,7 +133,7 @@ export function useMultiplayer({
       discards,
       draw,
     }))
-  }, [])
+  }, [socket])
 
   return {
     connected,

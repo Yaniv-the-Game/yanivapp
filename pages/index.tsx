@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import Head from 'next/head'
-import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
+import { GetServerSideProps } from 'next'
 import { customAlphabet } from 'nanoid'
 import Router from 'next/router'
 import { CSSTransition } from 'react-transition-group'
 import createPersistedState from 'use-persisted-state';
-import Card from '../components/card'
 import { useMultiplayer } from '../hooks/multiplayer'
 import { useYaniv, deck, shuffle } from '../hooks/yaniv'
 import Players from '../components/players'
@@ -57,23 +56,34 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   })
 
   const hand = useMemo(() => {
-    return hands[profiles.findIndex((p) => p.id === profile.id)]
-  }, [hands, profiles, profile])
+    return hands[profile.id]
+  }, [hands, profile])
 
   const onStart = useCallback(() => {
     // shuffle a complete deck and use it as our stack
     let stack = shuffle(deck)
 
     // splice five cards per player from the top of the stack
-    const hands = profiles.map(() => stack.splice(0, 5))
+    const hands = profiles.reduce((hands: { [profileId: string]: string[] }, profile: { id: string }) => ({ ...hands, [profile.id]: stack.splice(0, 5) }), {})
 
     // start the game with the remaining stack and predefined hand cards
     start({ hands, stack })
   }, [start, profiles])
 
+  const [cardsToDiscard, setCardsToDiscard] = useState({})
+
+  const onToggleCardToDiscard = useCallback((card: string) => {
+    setCardsToDiscard(cards => ({ ...cards, [card]: !cards[card] }))
+  }, [setCardsToDiscard])
+
   const onPlay = useCallback(() => {
-    play({ discards: ['PX'], draw: 'J1'})
-  }, [play])
+    const discards = Object.keys(cardsToDiscard)
+      .map(card => ({ card, active: cardsToDiscard[card] }))
+      .filter(({ active }) => active)
+      .map(({ card }) => card)
+
+    play({ discards, draw: pile[0][0]})
+  }, [cardsToDiscard, play, pile])
 
   return (
     <div className='yaniv'>
@@ -108,7 +118,11 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         <Table pile={pile} />
         <PlayButton onPlay={onPlay} />
         {hand && (
-          <Hand hand={hand} />
+          <Hand
+            hand={hand}
+            cardsToDiscard={cardsToDiscard}
+            onToggleCardToDiscard={onToggleCardToDiscard}
+          />
         )}
       </div>
       <style jsx>{`
