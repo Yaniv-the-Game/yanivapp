@@ -1,4 +1,5 @@
 import React from 'react'
+import Avatar from '../components/avatar'
 
 export default function Players({
   hands,
@@ -9,6 +10,13 @@ export default function Players({
   currentHand: number,
   myHand: number,
 }) {
+
+// below will be replace with profile data
+const name = ['Pascal','David','Ladina','Andrea'];
+  const currentAvatar = ['muesli','avocado','cookie','waffle'];
+  const currentMood = 'good';
+
+
   return (
     <div className='header'>
       {hands.map((hand, i) => (
@@ -20,10 +28,10 @@ export default function Players({
         </div>
         <div className="avatar">
           <div className="avatarBackground"></div>
-          <div className="avatarForeground"></div>
+          <div className="avatarForeground"><Avatar name={currentAvatar[i]} mood={currentMood} size={56}/></div>
         </div>
           <div>
-          <p>MYNAME</p>
+          <p>{name[i]}</p>
           {currentHand === i && (
             <div className='activeUser'></div>
           )}
@@ -43,6 +51,8 @@ export default function Players({
           width: 100%;
           text-align:center;
           padding-top:15px;
+          overflow: auto;
+          white-space: nowrap;
         }
         .cardIndicators{
           margin:0;
@@ -72,7 +82,6 @@ export default function Players({
           border-radius:60px;
         }
         .avatarForeground{
-          background: RGBA(25,190,255,0.7);
           height: 56px;
           width: 56px;
           position: absolute;
