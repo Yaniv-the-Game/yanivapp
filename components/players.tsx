@@ -2,13 +2,15 @@ import React from 'react'
 import Avatar from '../components/avatar'
 
 export default function Players({
+  profiles,
   hands,
-  currentHand,
-  myHand,
+  currentProfileId,
+  myProfileId,
 }: {
-  hands: string[][],
-  currentHand: number,
-  myHand: number,
+  profiles: { id: string, name: string, avatar: string }[],
+  hands: { [profileId: string]: string[] },
+  currentProfileId: string,
+  myProfileId: string,
 }) {
 
 // below will be replace with profile data
@@ -16,29 +18,30 @@ const name = ['Pascal','David','Ladina','Andrea'];
   const currentAvatar = ['muesli','avocado','cookie','waffle'];
   const currentMood = 'good';
 
-
   return (
     <div className='header'>
-      {hands.map((hand, i) => (
+      {profiles.map((profile) => (
         <div className='profile'>
-        <div className='cardIndicators'>
-          {hand.map(card => (
-            <div className='cardIndicator'>&nbsp;</div>
-          ))}
-        </div>
-        <div className="avatar">
-          <div className="avatarBackground"></div>
-          <div className="avatarForeground"><Avatar name={currentAvatar[i]} mood={currentMood} size={56}/></div>
-        </div>
+          <div className='cardIndicators'>
+            {hands[profile.id] && hands[profile.id].map(card => (
+              <div className='cardIndicator'>&nbsp;</div>
+            ))}
+          </div>
+          <div className="avatar">
+            <div className="avatarBackground" />
+            <div className="avatarForeground">
+              <Avatar name={profile.avatar} mood={currentMood} size={56} />
+            </div>
+          </div>
           <div>
-          <p>{name[i]}</p>
-          {currentHand === i && (
-            <div className='activeUser'></div>
-          )}
+            <p>{profile.name}</p>
+            {currentProfileId === profile.id && (
+              <div className='activeUser'></div>
+            )}
           </div>
         </div>
       ))}
-      {currentHand === myHand && (
+      {currentProfileId === myProfileId && (
         <div className='yourTurn'></div>
       )}
       <style jsx>{`

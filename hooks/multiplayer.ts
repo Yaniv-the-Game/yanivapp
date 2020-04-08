@@ -6,6 +6,7 @@ export function useMultiplayer({
   me,
   setUp,
   turnUp,
+  discardAndDraw,
 }: {
   eventsUri: string,
   gameId: string | null,
@@ -14,10 +15,12 @@ export function useMultiplayer({
     name: string,
     avatar: string,
   },
-  setUp: (hands: string[][], stack: string[]) => void,
+  setUp: (hands: { [profileId: string]: string[] }, stack: string[]) => void,
   turnUp: () => void,
+  discardAndDraw: (handId: string, discards: string[], draw: string) => void,
 }) {
   const [connected, setConnected] = useState(false)
+  const [currentProfileId, setCurrentProfileId] = useState(null)
   const [playing, setPlaying] = useState(false)
   const socket = useRef<WebSocket>()
   const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
@@ -48,7 +51,12 @@ export function useMultiplayer({
     setUp(hands, stack)
     turnUp()
     setPlaying(true)
+    setCurrentProfileId(profile.id)
   }, [setUp, turnUp, setPlaying])
+
+  const onPlay = useCallback(({ profile, discards, draw }) => {
+    discardAndDraw(profile.id, discards, draw)
+  }, [discardAndDraw])
 
   /**
    * connect through websocket and manage connection
@@ -72,6 +80,7 @@ export function useMultiplayer({
         case 'hello': onHello(message); break;
         case 'updateProfiles': onUpdateProfiles(message); break;
         case 'start': onStart(message); break;
+        case 'play': onPlay(message); break;
         default:
       }
     }
@@ -110,12 +119,29 @@ export function useMultiplayer({
     }))
   }, [])
 
+  const play = useCallback(({
+    discards,
+    draw,
+  }: {
+    discards: string[],
+    draw: string,
+  }) => {
+    socket.current?.send(JSON.stringify({
+      type: 'play',
+      gameId,
+      profile: me,
+      discards,
+      draw,
+    }))
+  }, [])
+
   return {
     connected,
     playing,
     gameId,
-    // hand,
     profiles,
+    currentProfileId,
     start,
+    play,
   }
 }

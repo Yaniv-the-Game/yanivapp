@@ -26,22 +26,21 @@ const eventHandlers = {
       profiles,
     }))))
   },
-  async start({ gameId, profile, hands, stack }: { gameId: string, profile: { id: string, name: string, avatar: string }, hands: string[][], stack: string[] }, context: WebSocketContext) {
+  async start({ gameId, profile, hands, stack }: { gameId: string, profile: { id: string, name: string, avatar: string }, hands: { [profileId: string]: string[] }, stack: string[] }, context: WebSocketContext) {
     pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
       type: 'start',
       profile,
       hands,
       stack,
     }))))
-
-    // pub.publish('all', new Item(new WebSocketMessageFormat(JSON.stringify({
-    //   jo: 'all',
-    //   jo2: 'all2',
-    // }))))
-    // context.send(JSON.stringify({
-    //   hello: 'world',
-    //   hello2: 'world',
-    // }))
+  },
+  async play({ gameId, profile, discards, draw }: { gameId: string, profile: { id: string, name: string, avatar: string }, discards: string[], draw: string }, context: WebSocketContext) {
+    pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
+      type: 'play',
+      profile,
+      discards,
+      draw,
+    }))))
   },
 };
 

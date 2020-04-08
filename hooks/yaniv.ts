@@ -94,17 +94,19 @@ export function shuffle<T>(values: T[]): T[] {
  * keeping track of cards on hand, the stack and pile of discarded cards
  */
 export function useYaniv() {
-  const [hands, setHands] = useState<string[][]>([])
+  const [hands, setHands] = useState<{ [handId: string]: string[]}>({})
   const [stack, setStack] = useState<string[]>([])
   const [pile, setPile] = useState<string[][]>([])
 
   /**
    * set up the game by providing the hands and stack cards
    */
-  const setUp = useCallback((hands: string[][], stack: string[]) => {
+  const setUp = useCallback((hands: { [handId: string]: string[]}, stack: string[]) => {
     setHands(hands)
-    setStack(stack)
-    setPile([])
+    // setStack(stack)
+    // setPile([])
+    setPile([[stack[0]], ...pile])
+    setStack(stack.slice(1))
   }, [setHands, setStack])
 
   /**
@@ -141,8 +143,8 @@ export function useYaniv() {
    * discard at least one card and draw one either from
    * stack or the discard pile
    */
-  const discardAndDraw = useCallback((player: number, discards: string[], draw: string) => {
-    const hand = hands[player]
+  const discardAndDraw = useCallback((handId: string, discards: string[], draw: string) => {
+    const hand = hands[handId]
     if (!discards.every((discard => hand.indexOf(discard) >= 0))) {
       throw new Error('cannot discard cards that are not on hand')
     }
@@ -152,10 +154,10 @@ export function useYaniv() {
     }
 
     if (stack[0] === draw) {
-      setHands(hands.map((hand, i) => i === player ? [...hand, draw].filter(card => discards.indexOf(card) < 0) : hand))
+      setHands({ ...hands, [handId]: [...hand, draw].filter(card => discards.indexOf(card) < 0) })
       setStack(stack.splice(1))
     } else if (pile[0]?.[0] === draw || pile[0]?.[pile[0].length - 1] === draw) {
-      setHands(hands.map((hand, i) => i === player ? [...hand, draw].filter(card => discards.indexOf(card) < 0) : hand))
+      setHands({ ...hands, [handId]: [...hand, draw].filter(card => discards.indexOf(card) < 0) })
       setPile(pile.map((level, i) => i === 0 ? level.filter(card => card !== draw) : level))
     } else {
       throw new Error('cannot draw card that is neither on top of stack nor on pile')
@@ -171,7 +173,7 @@ export function useYaniv() {
     stack,
     setUp,
     turnUp,
-    restock,
+    // restock,
     discardAndDraw,
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import Head from 'next/head'
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 import { customAlphabet } from 'nanoid'
 import Router from 'next/router'
@@ -9,6 +10,8 @@ import { useMultiplayer } from '../hooks/multiplayer'
 import { useYaniv, deck, shuffle } from '../hooks/yaniv'
 import Players from '../components/players'
 import Hand from '../components/hand'
+import Table from '../components/table'
+import PlayButton from '../components/play-button'
 
 const useProfileState = createPersistedState('profile');
 
@@ -22,57 +25,35 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     avatar: 'muesli',
   });
 
-  const joinRef = useRef<HTMLInputElement>()
-  const nameRef = useRef<HTMLInputElement>()
-
   const [gameId, setGameId] = useState(initialGameId)
 
   useEffect(() => {
+    // update the URL if setGameId is used to switch to another game
     Router.replace('/index', `/?game=${gameId}`, { shallow: true })
   }, [gameId])
-
-  const [myHand, setMyHand] = useState(0)
-  const [currentHand, setCurrentHand] = useState(0)
 
   const {
     hands,
     pile,
-    stack,
     setUp,
     turnUp,
-    restock,
     discardAndDraw,
   } = useYaniv()
-
-  const [discardCardsMap, setDiscardCardsMap] = useState<{ [card: string]: boolean }>({})
-  const [drawCard, setDrawCard] = useState(null)
-
-  const onPlay = useCallback((hand: number) => {
-    const discardCards = Object.keys(discardCardsMap)
-      .map(card => ({ card, active: discardCardsMap[card] }))
-      .filter(({ card, active }) => active)
-      .map(({ card }) => card)
-    discardAndDraw(hand, discardCards, drawCard)
-    setDiscardCardsMap({})
-    setDrawCard(null)
-  }, [discardAndDraw, discardCardsMap, drawCard, setDiscardCardsMap, setDrawCard])
 
   const {
     connected,
     playing,
     profiles,
+    currentProfileId,
     start,
+    play,
   } = useMultiplayer({
     eventsUri,
     gameId: gameId,
     me: profile,
-    // hands,
-    // pile,
-    // stack,
     setUp,
     turnUp,
-    // restock,
-    // discardAndDraw,
+    discardAndDraw,
   })
 
   const hand = useMemo(() => {
@@ -80,13 +61,25 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   }, [hands, profiles, profile])
 
   const onStart = useCallback(() => {
+    // shuffle a complete deck and use it as our stack
     let stack = shuffle(deck)
+
+    // splice five cards per player from the top of the stack
     const hands = profiles.map(() => stack.splice(0, 5))
+
+    // start the game with the remaining stack and predefined hand cards
     start({ hands, stack })
   }, [start, profiles])
 
+  const onPlay = useCallback(() => {
+    play({ discards: ['PX'], draw: 'J1'})
+  }, [play])
+
   return (
     <div className='yaniv'>
+      <Head>
+        <title>Janiv</title>
+      </Head>
       <CSSTransition
         in={!playing}
         timeout={300}
@@ -106,10 +99,14 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         </div>
       </CSSTransition>
       <div className='playground'>
-        <Players hands={hands} currentHand={currentHand} myHand={myHand} />
-        {/* <Table />
-          <PlayButton onPlay={onPlay} />
-        */}
+        <Players
+          profiles={profiles}
+          hands={hands}
+          currentProfileId={currentProfileId}
+          myProfileId={profile.id}
+        />
+        <Table pile={pile} />
+        <PlayButton onPlay={onPlay} />
         {hand && (
           <Hand hand={hand} />
         )}
