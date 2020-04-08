@@ -7,11 +7,9 @@ import { GripPubControl, WebSocketMessageFormat } from 'grip';
 const pub = new GripPubControl({
   control_uri: process.env.PUSHPIN_CONTROL_URI || 'http://localhost:6561',
   control_iss: process.env.PUSHPIN_CONTROL_ISS,
-  key: process.env.PUSHPIN_CONTROL_KEY,
+  // @ts-ignore API expects Buffer, but type wants string?
+  key: process.env.PUSHPIN_CONTROL_KEY && Buffer.from(process.env.PUSHPIN_CONTROL_KEY, 'base64'),
 })
-
-// game id => seed
-//
 
 const eventHandlers = {
   async hello({ gameId, profile }: { gameId: string, profile: { id: string, name: string, avatar: string } }, context: WebSocketContext) {
