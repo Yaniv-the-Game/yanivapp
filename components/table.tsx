@@ -10,23 +10,25 @@ export default function Table({
 }) {
   return (
     <div className='table'>
-      <div className='pile'>
-      <span className='card pe-0'><Card type="J1" /></span>
-      <span className='card pe-1'><Card type="B1" /></span>
-      <span className='card pe-2'><Card type="CX" /></span>
       {pile[0] && pile[0].map((card) => (
-        <span className='card drawcard selected' onClick={() => onToggleDrawCard(card)}>
+        <div className='pile'>
+          <span className='card pe-0'><Card type="J1" /></span>
+          <span className='card pe-1'><Card type="B1" /></span>
+          <span className='card pe-2'><Card type="CX" /></span>
+          <span className='card drawcard pe-3' onClick={() => onToggleDrawCard(card)}>
           <Card type={card} />
         </span>
+        </div>
+
       ))}
 
-      </div>
 
 
       <style jsx>{`
         .pe-0{transform: rotate(2deg);}
-        .pe-1{transform: rotate(-3deg);}
+        .pe-1{transform: rotate(-8deg);}
         .pe-2{transform: rotate(5deg);}
+        .pe-2{transform: rotate(-3deg);}
 
         .table {
           padding: 20px;
@@ -66,10 +68,10 @@ export default function Table({
 
 
         .selected{
-          transform: rotate(10deg);
+          transform: rotate(45deg);
           width:26vw;
           height:39vw;
-          box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.85);
+          box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.48);
 
         }
       `}</style>
