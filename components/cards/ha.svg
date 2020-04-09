@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 242 340">
-  <rect width="242" height="340" rx="20" fill="#fff"/>
-  <path d="M127.565 152.648c-4.906.091-5.881 6.71-5.881 6.71s-1.132-6.619-6.038-6.71-7.924 5.011-6.265 10.378 3.315 6.575 5.922 10.466 6.4 10.623 6.381 12.211c-.019-1.588 3.617-8.319 6.224-12.211s4.262-5.1 5.922-10.466-1.358-10.466-6.265-10.378M28.962 62.409c-3.115.057-3.737 4.239-3.737 4.239s-.716-4.182-3.831-4.239-5.032 3.165-3.978 6.556 2.1 4.154 3.76 6.612 4.064 6.711 4.049 7.714c-.012-1 2.3-5.256 3.952-7.714s2.706-3.221 3.76-6.612-.86-6.612-3.975-6.556M213.038 279.591c3.115-.057 3.737-4.239 3.737-4.239s.716 4.182 3.831 4.239 5.032-3.165 3.978-6.556-2.1-4.154-3.76-6.612-4.064-6.711-4.049-7.714c.012 1-2.3 5.256-3.952 7.714s-2.706 3.221-3.76 6.612.86 6.612 3.975 6.556" fill="#db362a"/>
-  <text transform="translate(10 32)" fill="#db362a" font-size="20" font-family="Helvetica">
-    <tspan x="0" y="15">A</tspan>
-  </text>
-  <g>
-    <text transform="rotate(180 114 155)" fill="#db362a" font-size="20" font-family="Helvetica">
-      <tspan x="0" y="15">A</tspan>
-    </text>
-  </g>
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 240 360" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect id="ha" x="0" y="0" width="240" height="360" style="fill:none;"/><clipPath id="_clip1"><rect x="0" y="0" width="240" height="360"/></clipPath><g clip-path="url(#_clip1)"><rect x="0" y="0" width="240" height="360" style="fill:#25c1c4;"/><g id="Layer1"></g><path d="M120,123.086c18.889,-35.889 56.668,-35.889 75.557,-17.944c18.89,17.944 18.89,53.834 0,89.724c-13.222,26.917 -47.223,53.835 -75.557,71.78c-28.334,-17.945 -62.335,-44.863 -75.558,-71.78c-18.889,-35.89 -18.889,-71.78 0,-89.724c18.89,-17.945 56.668,-17.945 75.558,17.944Z" style="fill:#fff;"/></g></svg>

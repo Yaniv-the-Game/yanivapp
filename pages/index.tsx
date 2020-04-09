@@ -128,8 +128,8 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           currentProfileId={currentProfileId}
           myProfileId={profile.id}
         />
+        <div className='handsarea'>
         <Table pile={pile} onToggleDrawCard={onToggleDrawCard} />
-        <PlayButton onPlay={onPlay} />
         {hand && (
           <Hand
             hand={hand}
@@ -137,6 +137,8 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
             onToggleCardToDiscard={onToggleCardToDiscard}
           />
         )}
+        <PlayButton onPlay={onPlay} />
+        </div>
       </div>
       <style jsx>{`
         .yaniv {
@@ -157,7 +159,12 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           transition: top 0.3s ease;
           overflow: scroll;
         }
+        .playground{
+          text-align:center;
+        }
+        .handsarea{
 
+        }
         .setup.exit {
           top: -100%;
         }
