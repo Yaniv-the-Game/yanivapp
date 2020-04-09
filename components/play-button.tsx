@@ -15,15 +15,18 @@ export default function PlayButton({
 
         .button {
           appearance: none;
-          width: 68px;
-          height: 68px;
+          position:absolute;
+          bottom:200px;
+          right:50px;
+          border-radius:50%;
+          height: 65px;
+          width:65px;
           display: inline-block;
           border: none;
-          border-radius: 50%;
           font-size: inherit;
           font-weight: inherit;
           color: inherit;
-          background: red;
+          background: #A9C3A6;
         }
       `}</style>
     </div>

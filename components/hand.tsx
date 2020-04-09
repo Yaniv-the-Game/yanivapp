@@ -14,33 +14,42 @@ export default function Hand({
     return null
   }
 
+  function toggleActiveClass(e) {
+    console.log(e);
+  }
+
   return (
     <div className="HandArea">
       <div className='selectedcards'>
         {hand.filter(card => cardsToDiscard[card]).map((card) => (
-          <div className='card cardSVG selected' onClick={() => onToggleCardToDiscard(card)}>
+          <div className='card selected' onClick={() => onToggleCardToDiscard(card)}>
             <Card type={card} />
           </div>
         ))}
       </div>
       <div className='cards'>
         {hand.map((card) => (
-          <div className='card cardSVG' onClick={() => onToggleCardToDiscard(card)}>
-            <div className="cardSVG">
+          <div className='card' onClick={() => onToggleCardToDiscard(card)}>
+            <div className='cardSVG' onClick={() => toggleActiveClass(this)}>
               <Card type={card} />
-            </div>
+              </div>
           </div>
         ))}
       </div>
       <style jsx>{`
         .HandArea{
+          position:absolute;
+          bottom:10px;
+          width:100%;
+          text-align:center;
         }
 
         .cards{
           position:relative;
-          margin:0;
+          margin:auto;
           width:auto;
           text-align:center;
+          max-width:800px;
         }
 
         .selectedcards{
@@ -50,22 +59,27 @@ export default function Hand({
 
         .card{
           position:relative;
-          width:68px;
           display:inline-block;
-        }
+          margin:5px;
+          width:16vw;
+          height:24vw;
+          max-width:100px;
+          max-height:150px;
+          box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.55);
+          transition: box-shadow 0.1s ease-in-out;
+          }
 
-        .cardSVG{
-          width:60px;
-          height:85px;
-          border-radius:10px;
-          -webkit-box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
-          -moz-box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
-          box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
-        }
+          .card:hover {
+            box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.85);
+          }
+
+
 
         .selected{
-          min-width:80px;
-          height:114px;
+          width:20vw;
+          height:30vw;
+          max-width:140px;
+          max-height:210px;
           position:relative;
         }
 
