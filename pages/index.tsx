@@ -11,6 +11,7 @@ import Players from '../components/players'
 import Hand from '../components/hand'
 import Table from '../components/table'
 import PlayButton from '../components/play-button'
+import EditProfile from '../components/edit-profile'
 
 const useProfileState = createPersistedState('profile');
 
@@ -96,7 +97,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   return (
     <div className='yaniv'>
       <Head>
-        <title>Janiv</title>
+        <title>Yaniv</title>
       </Head>
       <CSSTransition
         in={!playing}
@@ -114,6 +115,10 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
             <li>{p.name} {p.id === profile.id && '<-- that is you'}</li>
           ))}
           <button onClick={onStart}>begin</button>
+          <EditProfile
+            profile={profile}
+            onChange={(profile) => setProfile(profile)}
+          />
         </div>
       </CSSTransition>
       <div className='playground'>
@@ -150,6 +155,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           width: 100%;
           height: 100%;
           transition: top 0.3s ease;
+          overflow: scroll;
         }
 
         .setup.exit {

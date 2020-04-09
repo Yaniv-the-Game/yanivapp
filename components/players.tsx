@@ -13,7 +13,7 @@ export default function Players({
   myProfileId: string,
 }) {
 
-// below will be replace with profile data
+// below will be replaced with profile data
 const name = ['Pascal','David','Ladina','Andrea'];
   const currentAvatar = ['muesli','avocado','cookie','waffle'];
   const currentMood = 'good';
