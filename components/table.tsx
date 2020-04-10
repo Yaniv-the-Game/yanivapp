@@ -8,6 +8,22 @@ export default function Table({
   pile: string[][],
   onToggleDrawCard: (card: string) => void,
 }) {
+  const [active, setActive] = React.useState(false);
+
+  const selectFromPile = (event) => {
+    console.log(active);
+    if(!active){
+      setActive(true);
+      event.currentTarget.classList.add("selected");
+      }
+      else{
+      setActive(false);
+      event.currentTarget.classList.remove("selected");
+      }
+};
+
+
+
   return (
     <div className='table'>
       {pile[0] && pile[0].map((card) => (
@@ -15,9 +31,11 @@ export default function Table({
           <span className='card pe-0'><Card type="J1" /></span>
           <span className='card pe-1'><Card type="B1" /></span>
           <span className='card pe-2'><Card type="CX" /></span>
-          <span className='card drawcard pe-3' onClick={() => onToggleDrawCard(card)}>
-          <Card type={card} />
-        </span>
+            <span  onClick={() => {onToggleDrawCard(card)}}>
+              <span className='card pe-3' onClick={selectFromPile}>
+              <Card type={card} />
+              </span>
+            </span>
         </div>
 
       ))}
@@ -50,15 +68,9 @@ export default function Table({
           max-height:210px;
           display: inline-block;
           box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.55);
-        }
-        .drawcard{
           transition: all 0.1s ease-in-out;
           transform-origin:center center;
-        }
-        .drawcard:hover{
-          width:26vw;
-          height:39vw;
-          box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.85);
+
         }
 
         .stack{

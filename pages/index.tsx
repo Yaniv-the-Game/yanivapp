@@ -106,7 +106,8 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         unmountOnExit
       >
         <div className='setup'>
-          <h1>Yaniv {connected ? 'Online' : 'Offline'}</h1>
+        <img src='/img/header.png' alt="Yaniv" height="148px" width="250px" />
+          <h1>The Worlds greatest game {connected ? 'Online' : 'Offline'}</h1>
           <p>Send your friends this link to join the game:</p>
           <p>
             <a className='gamelink' href={`https://yanivapp.now.sh/${gameId}`}>yanivapp.now.sh/{gameId}</a>
