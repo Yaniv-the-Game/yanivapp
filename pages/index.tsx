@@ -73,7 +73,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   }, [start, profiles])
 
   const [cardsToDiscard, setCardsToDiscard] = useState({})
-  const [drawCard, setDrawCard] = useState(null)
+  const [drawCard, setDrawCard] = useState(null) // null means draw from stack
 
   const onToggleCardToDiscard = useCallback((card: string) => {
     setCardsToDiscard(cards => ({ ...cards, [card]: !cards[card] }))
@@ -84,6 +84,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   }, [setDrawCard])
 
   const onPlay = useCallback(() => {
+    // get an array of cards to discard from the cardsToDiscard map
     const discards = Object.keys(cardsToDiscard)
       .map(card => ({ card, active: cardsToDiscard[card] }))
       .filter(({ active }) => active)
@@ -130,7 +131,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           myProfileId={profile.id}
         />
         <div className='handsarea'>
-        <Table pile={pile} onToggleDrawCard={onToggleDrawCard} />
+        <Table pile={pile} drawCard={drawCard} onToggleDrawCard={onToggleDrawCard} />
         {hand && (
           <Hand
             hand={hand}

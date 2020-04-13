@@ -1,6 +1,6 @@
 import React from 'react'
+import classnames from 'classnames'
 import Card from '../components/card'
-
 
 export default function Hand({
   hand,
@@ -11,46 +11,25 @@ export default function Hand({
   cardsToDiscard: { [card: string]: boolean },
   onToggleCardToDiscard: (card: string) => void,
 }) {
-
-  const [active, setActive] = React.useState(false);
-
-  const hideCardFromHand = (event) => {
-    if(active){
-      setActive(false);
-    }
-    else{
-      setActive(true);  
-    }
-
-};
-
-const showCardInHand = (card) => {
-setActive(false);
-};
-
   if (!hand) {
     return null
   }
-
-
 
   return (
     <div className="HandArea">
       <div className='selectedcards'>
         {hand.filter(card => cardsToDiscard[card]).map((card) => (
           <div className='card cardSVG selected' key={card} onClick={() => onToggleCardToDiscard(card)}>
-            <div className="" onClick={() => showCardInHand(card)}>
             <Card type={card} />
-            </div>
           </div>
         ))}
       </div>
       <div className='cards'>
         {hand.map((card) => (
           <div className='card' key={card} onClick={() => onToggleCardToDiscard(card)}>
-            <div className={`cardSVG ${active ? "testClass":""}`} onClick={hideCardFromHand}>
+            <div className={classnames('cardSVG', { active: cardsToDiscard[card] })}>
               <Card type={card} />
-              </div>
+            </div>
           </div>
         ))}
       </div>

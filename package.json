@@ -13,6 +13,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "classnames": "^2.2.6",
     "co-body": "^6.0.0",
     "grip": "^1.6.0",
     "nanoid": "^3.0.2",
