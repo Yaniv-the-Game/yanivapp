@@ -21,9 +21,16 @@ export function useMultiplayer({
 }) {
   const [connected, setConnected] = useState(false)
   const [currentProfileId, setCurrentProfileId] = useState(null)
+  const [currentDealerId, setDealerId] = useState(null)
   const [playing, setPlaying] = useState(false)
   const socket = useRef<WebSocket>()
   const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
+  const [scores, setScores] = useState([])
+  // const scores = [
+  //   { j2s: 12, xxz: 0, p87: 5 },
+  //   { j2s: 12, xxz: 0, p87: 5 },
+  //   { j2s: 12, xxz: 0, p87: 5 },
+  // ]
 
   const onHello = useCallback(({ profile }) => {
     setProfiles((profiles) => {
@@ -60,6 +67,11 @@ export function useMultiplayer({
     discardAndDraw(profile.id, discards, draw)
   }, [discardAndDraw])
 
+  const onYaniv = useCallback(({ profile }) => {
+    // TODO check and update game state
+    console.log(`${profile.id} says Yaniv!`)
+  }, [])
+
   /**
    * connect through websocket and manage connection
    */
@@ -83,6 +95,7 @@ export function useMultiplayer({
         case 'updateProfiles': onUpdateProfiles(message); break;
         case 'start': onStart(message); break;
         case 'play': onPlay(message); break;
+        case 'yaniv': onYaniv(message); break;
         default:
       }
     }
@@ -137,13 +150,24 @@ export function useMultiplayer({
     }))
   }, [socket])
 
+  const yaniv = useCallback(() => {
+    socket.current?.send(JSON.stringify({
+      type: 'yaniv',
+      gameId,
+      profile: me,
+    }))
+  }, [socket])
+
   return {
     connected,
     playing,
     gameId,
     profiles,
     currentProfileId,
+    currentDealerId,
+    scores,
     start,
     play,
+    yaniv,
   }
 }

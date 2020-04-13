@@ -46,8 +46,11 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     playing,
     profiles,
     currentProfileId,
+    currentDealerId,
+    scores,
     start,
     play,
+    yaniv,
   } = useMultiplayer({
     eventsUri,
     gameId: gameId,
@@ -95,6 +98,11 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     setDrawCard(null)
   }, [cardsToDiscard, setCardsToDiscard, stack, drawCard, setDrawCard, play, pile])
 
+   // TODO call onYaniv() to signal Yaniv!
+  const onYaniv = useCallback(() => {
+    yaniv()
+  }, [yaniv])
+
   return (
     <div className='yaniv'>
       <Head>
@@ -113,9 +121,11 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           <div className="share">
             <a className='gamelink' href={`https://yanivapp.now.sh/${gameId}`}>yanivapp.now.sh/{gameId}</a>
             <div className="Whatsapp">
-            <a className='whatsapplink' href={`https://wa.me/?text=Let%27s%20play%20yaniv%21%20Join%20on%20https%3A%2F%2Fyanivapp.now.sh/${gameId}`}>
-            <img src='/img/whatsapp.png' className="whatsappimage" alt="Share on Whatsapp" height="25px" width="25px" />Share on WhatsApp</a>
-</div>
+              <a className='whatsapplink' href={`https://wa.me/?text=Let%27s%20play%20yaniv%21%20Join%20on%20https%3A%2F%2Fyanivapp.now.sh/${gameId}`}>
+                <img src='/img/whatsapp.png' className="whatsappimage" alt="Share on Whatsapp" height="25px" width="25px" />
+                <span>Share on WhatsApp</span>
+              </a>
+            </div>
           </div>
           {profiles.map((p) => (
             <li>{p.name} {p.id === profile.id && '<-- that is you'}</li>
@@ -160,7 +170,6 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         h1{
           font-size:24px;
         }
-
 
         .setup {
           color: white;
