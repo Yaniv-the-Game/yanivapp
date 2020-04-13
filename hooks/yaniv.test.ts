@@ -13,7 +13,7 @@ describe('yaniv hook', () => {
     act(() => result.current.setUp({ a: ['PK'] }, ['J1']))
     act(() => result.current.discardAndDraw('a', ['PK'], 'J1'))
 
-    expect(result.current.hands).toStrictEqual([['J1']])
+    expect(result.current.hands).toStrictEqual({ a: ['J1'] })
     expect(result.current.stack).toStrictEqual([])
   })
 
@@ -24,7 +24,7 @@ describe('yaniv hook', () => {
     act(() => result.current.turnUp())
     act(() => result.current.discardAndDraw('a', ['PK'], 'J1'))
 
-    expect(result.current.hands).toStrictEqual([['J1']])
+    expect(result.current.hands).toStrictEqual({ a: ['J1'] })
     expect(result.current.stack).toStrictEqual([])
     expect(result.current.pile).toStrictEqual([['PK']])
   })
