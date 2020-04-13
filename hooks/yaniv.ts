@@ -156,15 +156,15 @@ export function useYaniv() {
     if (stack[0] === draw) {
       setHands({ ...hands, [handId]: [...hand, draw].filter(card => discards.indexOf(card) < 0) })
       setStack(stack.splice(1))
+      const orderedDiscards = orderCards(discards)
+      setPile([orderedDiscards, ...pile])
     } else if (pile[0]?.[0] === draw || pile[0]?.[pile[0].length - 1] === draw) {
       setHands({ ...hands, [handId]: [...hand, draw].filter(card => discards.indexOf(card) < 0) })
-      setPile(pile.map((level, i) => i === 0 ? level.filter(card => card !== draw) : level))
+      const orderedDiscards = orderCards(discards)
+      setPile([orderedDiscards, ...pile.map((level, i) => i === 0 ? level.filter(card => card !== draw) : level).filter(level => level.length > 0)])
     } else {
       throw new Error('cannot draw card that is neither on top of stack nor on pile')
     }
-
-    const orderedDiscards = orderCards(discards)
-    setPile([orderedDiscards, ...pile])
   }, [hands, pile, setPile, stack, setStack])
 
   return {

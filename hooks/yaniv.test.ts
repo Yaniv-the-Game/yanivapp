@@ -21,7 +21,7 @@ describe('yaniv hook', () => {
     const { result } = renderHook(() => useYaniv())
 
     act(() => result.current.setUp({ a: ['PK'] }, ['J1']))
-    act(() => result.current.turnUp())
+    // act(() => result.current.turnUp())
     act(() => result.current.discardAndDraw('a', ['PK'], 'J1'))
 
     expect(result.current.hands).toStrictEqual({ a: ['J1'] })
