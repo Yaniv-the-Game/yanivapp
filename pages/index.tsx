@@ -97,7 +97,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   return (
     <div className='yaniv'>
       <Head>
-        <title>Yaniv</title>
+        <title>yaniv!</title>
       </Head>
       <CSSTransition
         in={!playing}
@@ -109,9 +109,13 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         <img src='/img/header.png' alt="Yaniv" height="148px" width="250px" />
           <h1>The Worlds greatest game {connected ? 'Online' : 'Offline'}</h1>
           <p>Send your friends this link to join the game:</p>
-          <p>
+          <div className="share">
             <a className='gamelink' href={`https://yanivapp.now.sh/${gameId}`}>yanivapp.now.sh/{gameId}</a>
-          </p>
+            <div className="Whatsapp">
+            <a className='whatsapplink' href={`https://wa.me/?text=Let%27s%20play%20yaniv%21%20Join%20on%20https%3A%2F%2Fyanivapp.now.sh/${gameId}`}>
+            <img src='/img/whatsapp.png' className="whatsappimage" alt="Share on Whatsapp" height="25px" width="25px" />Share on WhatsApp</a>
+</div>
+          </div>
           {profiles.map((p) => (
             <li>{p.name} {p.id === profile.id && '<-- that is you'}</li>
           ))}
@@ -148,6 +152,15 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           height: 100%;
         }
 
+        .whatsappimage{
+          vertical-align:middle;
+        }
+
+        h1{
+          font-size:24px;
+        }
+
+
         .setup {
           color: white;
           text-align: center;
@@ -159,12 +172,13 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
           height: 100%;
           transition: top 0.3s ease;
           overflow: scroll;
+          padding-top:30px;
         }
         .playground{
           text-align:center;
         }
-        .handsarea{
-
+        .share{
+          font-size:16px;
         }
         .setup.exit {
           top: -100%;
@@ -175,7 +189,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         }
 
         .setup .gamelink {
-          font-size: 30px;
+          font-size: 24px;
         }
 
         .playground {
