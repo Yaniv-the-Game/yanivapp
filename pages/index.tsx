@@ -100,8 +100,12 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
 
    // TODO call onYaniv() to signal Yaniv!
   const onYaniv = useCallback(() => {
+    console.log("Yaniv!")
     yaniv()
   }, [yaniv])
+
+// TODO callculate current score for this user at hand
+const score = 10;
 
   return (
     <div className='yaniv'>
@@ -153,7 +157,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
             onToggleCardToDiscard={onToggleCardToDiscard}
           />
         )}
-        <PlayButton onPlay={onPlay} />
+        <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} />
         </div>
       </div>
       <style jsx>{`

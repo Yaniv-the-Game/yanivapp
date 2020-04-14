@@ -1,14 +1,32 @@
 import React from 'react'
+import classnames from 'classnames'
+
 
 export default function PlayButton({
   onPlay,
+  onYaniv,
+  score,
+  cardsToDiscard,
 }: {
   onPlay: () => void,
+  onYaniv: () => void,
+  cardsToDiscard: { [card: string]: boolean },
+  score: number,
 }) {
+
+// TODO tell if cards are selected in hand or not... (maybe need hand?)
+const cardsSelected = false;
+
   return (
     <div className='play-button'>
-      <button className='button' type='button' onClick={onPlay}>play</button>
-      <style jsx>{`
+
+    {score <= 5 && !cardsSelected
+          ?  <button className='button yaniv' type='button' onClick={onYaniv}>yaniv!</button>
+          : <button className='button normal' type='button' onClick={onPlay}>play</button>
+        }
+
+
+<style jsx>{`
         .play-button {
           text-align: center;
         }
