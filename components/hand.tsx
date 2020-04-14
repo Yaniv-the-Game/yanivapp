@@ -94,9 +94,7 @@ export default function Hand({
         .selected.active {
           display:inline-block;
         }
-        .testClass{
-          border:3px solid yellow;
-        }
+
       `}</style>
     </div>
   )
