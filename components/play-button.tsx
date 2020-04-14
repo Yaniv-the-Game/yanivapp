@@ -44,7 +44,14 @@ const cardsSelected = false;
           font-size: inherit;
           font-weight: inherit;
           color: inherit;
+
+        }
+        .normal{
           background: #A9C3A6;
+        }
+        .yaniv{
+          background: blue;
+          color: white;
         }
       `}</style>
     </div>

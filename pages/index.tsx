@@ -123,9 +123,9 @@ const score = 10;
           <h1>The Worlds greatest game {connected ? 'Online' : 'Offline'}</h1>
           <p>Send your friends this link to join the game:</p>
           <div className="share">
-            <a className='gamelink' href={`https://yanivapp.now.sh/${gameId}`}>yanivapp.now.sh/{gameId}</a>
+            <a className='gamelink' href={`https://yanivapp.now.sh/?game=${gameId}`}>yanivapp.now.sh/?game={gameId}</a>
             <div className="Whatsapp">
-              <a className='whatsapplink' href={`https://wa.me/?text=Let%27s%20play%20yaniv%21%20Join%20on%20https%3A%2F%2Fyanivapp.now.sh/${gameId}`}>
+              <a className='whatsapplink' href={`https://wa.me/?text=Let%27s%20play%20yaniv%21%20Join%20on%20https%3A%2F%2Fyanivapp.now.sh/?game=${gameId}`}>
                 <img src='/img/whatsapp.png' className="whatsappimage" alt="Share on Whatsapp" height="25px" width="25px" />
                 <span>Share on WhatsApp</span>
               </a>
