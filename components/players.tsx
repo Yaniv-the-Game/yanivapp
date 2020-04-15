@@ -4,11 +4,13 @@ import Avatar from '../components/avatar'
 export default function Players({
   profiles,
   hands,
-  currentProfileId,
+  myTurn,
   myProfileId,
+  currentProfileId,
 }: {
   profiles: { id: string, name: string, avatar: string }[],
   hands: { [profileId: string]: string[] },
+  myTurn: boolean,
   currentProfileId: string,
   myProfileId: string,
 }) {
@@ -41,7 +43,7 @@ const name = ['Pascal','David','Ladina','Andrea'];
           </div>
         </div>
       ))}
-      {currentProfileId === myProfileId && (
+      {myTurn && (
         <div className='yourTurn'></div>
       )}
       <style jsx>{`
