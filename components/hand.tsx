@@ -6,17 +6,19 @@ export default function Hand({
   hand,
   cardsToDiscard,
   onToggleCardToDiscard,
+  myTurn,
 }: {
   hand: string[],
   cardsToDiscard: { [card: string]: boolean },
   onToggleCardToDiscard: (card: string) => void,
+  myTurn:boolean,
 }) {
   if (!hand) {
     return null
   }
 
   return (
-    <div className="HandArea">
+    <div className={classnames('HandArea', { disabled: !myTurn })}>
       <div className='selectedcards'>
         {hand.filter(card => cardsToDiscard[card]).map((card) => (
           <div className='card cardSVG selected' key={card} onClick={() => onToggleCardToDiscard(card)}>
@@ -93,6 +95,10 @@ export default function Hand({
 
         .selected.active {
           display:inline-block;
+        }
+
+        .disabled{
+          display: none;
         }
 
       `}</style>
