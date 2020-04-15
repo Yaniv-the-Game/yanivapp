@@ -64,6 +64,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     return hands[profile.id]
   }, [hands, profile])
 
+
   const onStart = useCallback(() => {
     // shuffle a complete deck and use it as our stack
     let stack = shuffle(deck)
@@ -73,6 +74,10 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
 
     // start the game with the remaining stack and predefined hand cards
     start({ hands, stack })
+
+    // tell me if its my turn or not
+    onDefineTurn()
+
   }, [start, profiles])
 
   const [cardsToDiscard, setCardsToDiscard] = useState({})
@@ -96,7 +101,18 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     play({ discards, draw: drawCard || stack[0]})
     setCardsToDiscard({})
     setDrawCard(null)
+    onDefineTurn() // redefine the turn (myTUrn) after a successfull round
+
   }, [cardsToDiscard, setCardsToDiscard, stack, drawCard, setDrawCard, play, pile])
+
+  const [myTurn, setMyTurn] = useState(false);
+  const onDefineTurn = useCallback(() => {
+    // this fucker never seems to be set
+      console.log(currentProfileId);
+      console.log(profile.id);
+      setMyTurn(currentDealerId === profile.id)
+    },[Hand,Players])
+
 
    // TODO call onYaniv() to signal Yaniv!
   const onYaniv = useCallback(() => {
@@ -145,8 +161,9 @@ const score = 10;
         <Players
           profiles={profiles}
           hands={hands}
-          currentProfileId={currentProfileId}
+          myTurn={myTurn}
           myProfileId={profile.id}
+          currentProfileId={currentProfileId}
         />
         <div className='handsarea'>
         <Table pile={pile} drawCard={drawCard} onToggleDrawCard={onToggleDrawCard} />
@@ -155,6 +172,7 @@ const score = 10;
             hand={hand}
             cardsToDiscard={cardsToDiscard}
             onToggleCardToDiscard={onToggleCardToDiscard}
+            myTurn={myTurn}
           />
         )}
         <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} />
