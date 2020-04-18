@@ -148,7 +148,7 @@ const score = 10;
             </div>
           </div>
           {profiles.map((p) => (
-            <li>{p.name} {p.id === profile.id && '<-- that is you'}</li>
+            <li key={p.id}>{p.name} {p.id === profile.id && '<-- that is you'}</li>
           ))}
           <button onClick={onStart}>begin</button>
           <EditProfile

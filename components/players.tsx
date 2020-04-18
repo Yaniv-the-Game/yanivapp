@@ -23,7 +23,7 @@ const name = ['Pascal','David','Ladina','Andrea'];
   return (
     <div className='header'>
       {profiles.map((profile) => (
-        <div className='profile'>
+        <div key={profile.id} className='profile'>
           <div className='cardIndicators'>
             {hands[profile.id] && hands[profile.id].map(card => (
               <div className='cardIndicator'>&nbsp;</div>
