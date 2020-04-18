@@ -18,7 +18,7 @@ export default function Hand({
   }
 
   return (
-    <div className={classnames('HandArea', { disabled: !myTurn })}>
+    <div className={classnames('HandArea')}>
       <div className='selectedcards'>
         {hand.filter(card => cardsToDiscard[card]).map((card) => (
           <div className='card cardSVG selected' key={card} onClick={() => onToggleCardToDiscard(card)}>

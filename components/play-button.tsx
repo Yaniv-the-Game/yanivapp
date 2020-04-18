@@ -7,15 +7,17 @@ export default function PlayButton({
   onYaniv,
   score,
   cardsToDiscard,
+  myTurn,
 }: {
   onPlay: () => void,
   onYaniv: () => void,
   cardsToDiscard: { [card: string]: boolean },
   score: number,
+  myTurn: boolean,
 }) {
 
 // TODO tell if cards are selected in hand or not... (maybe need hand?)
-const cardsSelected = false;
+const cardsSelected = Object.values(cardsToDiscard).some(active => active);
 
   return (
     <div className='play-button'>

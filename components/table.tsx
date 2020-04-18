@@ -6,10 +6,12 @@ export default function Table({
   pile,
   drawCard,
   onToggleDrawCard,
+  myTurn,
 }: {
   pile: string[][],
   drawCard: string | null,
   onToggleDrawCard: (card: string) => void,
+  myTurn: boolean,
 }) {
   return (
     <div className='table'>

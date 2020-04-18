@@ -6,7 +6,7 @@ import Router from 'next/router'
 import { CSSTransition } from 'react-transition-group'
 import createPersistedState from 'use-persisted-state';
 import { useMultiplayer } from '../hooks/multiplayer'
-import { useYaniv, deck, shuffle } from '../hooks/yaniv'
+import { useYaniv, deck, shuffle, inspect } from '../hooks/yaniv'
 import Players from '../components/players'
 import Hand from '../components/hand'
 import Table from '../components/table'
@@ -75,8 +75,6 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     // start the game with the remaining stack and predefined hand cards
     start({ hands, stack })
 
-    // tell me if its my turn or not
-    onDefineTurn()
 
   }, [start, profiles])
 
@@ -101,18 +99,10 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     play({ discards, draw: drawCard || stack[0]})
     setCardsToDiscard({})
     setDrawCard(null)
-    onDefineTurn() // redefine the turn (myTUrn) after a successfull round
 
   }, [cardsToDiscard, setCardsToDiscard, stack, drawCard, setDrawCard, play, pile])
 
   const [myTurn, setMyTurn] = useState(false);
-  const onDefineTurn = useCallback(() => {
-    // this fucker never seems to be set
-      console.log(currentProfileId);
-      console.log(profile.id);
-      setMyTurn(currentDealerId === profile.id)
-    },[Hand,Players])
-
 
    // TODO call onYaniv() to signal Yaniv!
   const onYaniv = useCallback(() => {
@@ -121,7 +111,10 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   }, [yaniv])
 
 // TODO callculate current score for this user at hand
-const score = 10;
+const score = useMemo(() => {
+  if(!hand){return null}
+  return  hand.map(card => inspect(card).value).reduce((total, value)=>total+value,0);
+},[hand])
 
   return (
     <div className='yaniv'>
@@ -161,21 +154,21 @@ const score = 10;
         <Players
           profiles={profiles}
           hands={hands}
-          myTurn={myTurn}
+          myTurn={currentDealerId === profile.id}
           myProfileId={profile.id}
           currentProfileId={currentProfileId}
         />
         <div className='handsarea'>
-        <Table pile={pile} drawCard={drawCard} onToggleDrawCard={onToggleDrawCard} />
+        <Table pile={pile} drawCard={drawCard} onToggleDrawCard={onToggleDrawCard} myTurn={currentDealerId === profile.id} />
         {hand && (
           <Hand
             hand={hand}
             cardsToDiscard={cardsToDiscard}
             onToggleCardToDiscard={onToggleCardToDiscard}
-            myTurn={myTurn}
+            myTurn={currentDealerId === profile.id}
           />
         )}
-        <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} />
+        <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} myTurn={currentDealerId === profile.id} />
         </div>
       </div>
       <style jsx>{`
