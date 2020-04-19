@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Avatar from '../components/avatar'
+import classnames from 'classnames'
 
 export default function EditProfile({
     profile,
@@ -32,9 +33,7 @@ export default function EditProfile({
         <div className='avatars'>
           {avatarNames.map((ava) => (
             <div className="avatar" key={ava}>
-              {ava === profile.avatar && (
-                <div className="avatarBackground"></div>
-              )}
+                <div className={classnames("avatarBackground",{hide:profile.avatar != ava})}></div>
               <div className="avatarForeground" onClick={() => setAvatar(ava) } >
                 <Avatar name={ava} mood={'good'} size={56} />
               </div>
@@ -80,6 +79,9 @@ export default function EditProfile({
         margin-left: -28px;
         top: 50%;
         margin-top: -28px;
+      }
+      .hide{
+        display:none;
       }
       `}</style>
       </div>
