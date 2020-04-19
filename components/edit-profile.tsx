@@ -15,81 +15,72 @@ export default function EditProfile({
     const [name, setName] = useState(profile.name)
     const [avatar, setAvatar] = useState(profile.avatar)
 
-    const avatarNames = ['avocado', 'cookie', 'strawberry']
+    profile = {
+      id: profile.id,
+      name: name,
+      avatar: avatar,
+    }
+
+    const avatarNames = ['avocado', 'cookie', 'strawberry','waffle','muesli','sandwich','gipfeli']
 
     return (
-        <div>
-            <p>change profile</p>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-            <br/><br/>
-            <table className='table' >
-                <tr>   
-                    <td>
-                        <button className='avatarButton' onClick={() => setAvatar('avocado') }>
-                            <Avatar name={'avocado'} mood={'good'} size={56} />
-                        </button>
-                    </td>
-                    <td>
-                        <button className='avatarButton' onClick={() => setAvatar('cookie') }>
-                            <Avatar name={'cookie'} mood={'good'} size={56} />
-                        </button>
-                    </td>
-                    <td>
-                        <button className='avatarButton' onClick={() => setAvatar('strawberry') }>
-                            <Avatar name={'strawberry'} mood={'good'} size={56} />
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button className='avatarButton' onClick={() => setAvatar('waffle') }>
-                            <Avatar name={'waffle'} mood={'good'} size={56} />
-                        </button>
-                    </td>
-                    <td>
-                        <button className='avatarButton' onClick={() => setAvatar('muesli') }>
-                            <Avatar name={'muesli'} mood={'good'} size={56} />
-                        </button>
-                    </td>
-                    <td>
-                        <button className='avatarButton' onClick={() => setAvatar('sandwich') }>
-                            <Avatar name={'sandwich'} mood={'good'} size={56} />
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colSpan={3}>
-                        <button className='avatarButton' onClick={() => setAvatar('gipfeli') }>
-                            <Avatar name={'gipfeli'} mood={'good'} size={56} />
-                        </button>
-                    </td>
-                </tr>
-            </table>
-            <button
-                onClick={() => onChange({
-                    id: profile.id,
-                    name: name,
-                    avatar: avatar,
-                })
-            }>change profile</button>
+      <div>
+        <p>change profile</p>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        <button
+        onClick={() => onChange({
+          id: profile.id,
+          name: name,
+          avatar: avatar,
+        })
+      }>change Name</button>
+        <br/><br/>
 
-            <style jsx >{`
+        <div className='avatars'>
+          {avatarNames.map((ava) => (
+            <div className="avatar" key={ava}>
+              {ava === profile.avatar && (
+                <div className="avatarBackground"></div>
+              )}
+              <div className="avatarForeground" onClick={() => setAvatar(ava) } >
+                <Avatar name={ava} mood={'good'} size={56} />
+              </div>
+            </div>
+          ))}
+      </div>
 
-            .avatarButton {
-                appearance: none;
-                background: none;
-                border: none;
-                /*border-radius: 50%;*/
-                padding: 2px;
-                margin: 0;
-                display: inline-block;
-                font-size: 0;
-            }
+    <style jsx >{`
 
-            .table {
-                margin: 0 auto; /* or margin: 0 auto 0 auto */
-            }
-            `}</style>
-        </div> 
+      .avatar{
+        height:56px;
+        width:56px;
+        display: inline-block;
+        margin-right:15px;
+        position:relative;
+        cursor: pointer;
+
+      }
+      .avatarBackground{
+        background: RGBA(255,255,255,0.7);
+        height: 46px;
+        width: 46px;
+        position: absolute;
+        left: 50%;
+        margin-left: -23px;
+        top: 50%;
+        margin-top: -23px;
+        border-radius:60px;
+      }
+      .avatarForeground{
+        height: 56px;
+        width: 56px;
+        position: absolute;
+        left: 50%;
+        margin-left: -28px;
+        top: 50%;
+        margin-top: -28px;
+      }
+      `}</style>
+      </div>
     )
 }
