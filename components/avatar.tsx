@@ -46,6 +46,8 @@ export default function Avatar({
     case 'bad':
       m = "B";
       break;
+    case 'winner':
+      m = "K";
     default:
       m = "G";
       break;
