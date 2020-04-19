@@ -20,7 +20,7 @@ export default function PlayButton({
 const cardsSelected = Object.values(cardsToDiscard).some(active => active);
 
   return (
-    <div className='play-button'>
+    <div className={classnames('play-button',{hide: !myTurn})}>
     {score <= 5 && !cardsSelected
           ?  <button className='button yaniv' type='button' onClick={onYaniv}>yaniv!</button>
           : <button className='button normal' type='button' onClick={onPlay}>play</button>
@@ -53,6 +53,9 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
         .yaniv{
           background: #B2A6C3;
           color: white;
+        }
+        .hide{
+          display: none;
         }
 
       `}</style>
