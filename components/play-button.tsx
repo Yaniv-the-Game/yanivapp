@@ -23,7 +23,7 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
     <div className={classnames('play-button',{hide: !myTurn})}>
     {score <= 5 && !cardsSelected
           ?  <button className='button yaniv' type='button' onClick={onYaniv}>yaniv!</button>
-          : <button className='button normal' type='button' onClick={onPlay}>play</button>
+          : <button className={classnames('button normal',{hide: !cardsSelected})} type='button' onClick={onPlay}>play</button>
         }
 
 
