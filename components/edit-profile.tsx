@@ -25,15 +25,8 @@ export default function EditProfile({
 
     return (
       <div>
-        <p>change profile</p>
+        <h2>change profile</h2>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-        <button
-        onClick={() => onChange({
-          id: profile.id,
-          name: name,
-          avatar: avatar,
-        })
-      }>change Name</button>
         <br/><br/>
 
         <div className='avatars'>
@@ -48,6 +41,14 @@ export default function EditProfile({
             </div>
           ))}
       </div>
+
+      <button
+      onClick={() => onChange({
+        id: profile.id,
+        name: name,
+        avatar: avatar,
+      })
+    }>Update</button>
 
     <style jsx >{`
 

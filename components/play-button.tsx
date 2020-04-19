@@ -21,7 +21,6 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
 
   return (
     <div className='play-button'>
-
     {score <= 5 && !cardsSelected
           ?  <button className='button yaniv' type='button' onClick={onYaniv}>yaniv!</button>
           : <button className='button normal' type='button' onClick={onPlay}>play</button>
@@ -44,17 +43,18 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
           display: inline-block;
           border: none;
           font-size: inherit;
-          font-weight: inherit;
-          color: inherit;
-
+          font-family: 'Mali';
+          font-weight: 800;
+          color: white;
         }
         .normal{
           background: #A9C3A6;
         }
         .yaniv{
-          background: blue;
+          background: #B2A6C3;
           color: white;
         }
+
       `}</style>
     </div>
   )

@@ -8,6 +8,7 @@ import createPersistedState from 'use-persisted-state';
 import { useMultiplayer } from '../hooks/multiplayer'
 import { useYaniv, deck, shuffle, inspect } from '../hooks/yaniv'
 import Players from '../components/players'
+import Avatar from '../components/avatar'
 import Hand from '../components/hand'
 import Table from '../components/table'
 import PlayButton from '../components/play-button'
@@ -141,9 +142,15 @@ const score = useMemo(() => {
               </a>
             </div>
           </div>
+          <div className='onlinePlayers'>
+          <h2>Players</h2>
           {profiles.map((p) => (
-            <li key={p.id}>{p.name} {p.id === profile.id && '<-- that is you'}</li>
+            <li key={p.id}>
+              <Avatar name={p.avatar} mood={'good'} size={30} />
+             {p.name} {p.id === profile.id && '(you)'}
+             </li>
           ))}
+          </div>
           <button onClick={onStart}>begin</button>
           <EditProfile
             profile={profile}
@@ -223,6 +230,10 @@ const score = useMemo(() => {
 
         .setup .gamelink {
           font-size: 24px;
+        }
+        .onlinePlayers > li{
+          list-style:none;
+          height:45px;
         }
 
       `}</style>
