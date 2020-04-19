@@ -13,6 +13,7 @@ import Table from '../components/table'
 import PlayButton from '../components/play-button'
 import EditProfile from '../components/edit-profile'
 
+
 const useProfileState = createPersistedState('profile');
 
 const generateGameId = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 3)
@@ -21,8 +22,8 @@ const generateProfileId = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 4)
 export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
   const [profile, setProfile] = useProfileState({
     id: generateProfileId(),
-    name: 'Muesli',
-    avatar: 'muesli',
+    name: 'Name',
+    avatar: 'avocado',
   });
 
   const [gameId, setGameId] = useState(initialGameId)
@@ -150,6 +151,12 @@ const score = useMemo(() => {
           />
         </div>
       </CSSTransition>
+      <CSSTransition
+        in={playing}
+        timeout={300}
+        mountOnEnter
+        unmountOnExit
+      >
       <div className='playground'>
         <Players
           profiles={profiles}
@@ -171,6 +178,7 @@ const score = useMemo(() => {
         <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} myTurn={currentDealerId === profile.id} />
         </div>
       </div>
+      </CSSTransition>
       <style jsx>{`
         .yaniv {
           color: #333;
@@ -217,8 +225,6 @@ const score = useMemo(() => {
           font-size: 24px;
         }
 
-        .playground {
-        }
       `}</style>
     </div>
   )

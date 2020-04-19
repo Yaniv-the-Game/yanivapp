@@ -16,8 +16,6 @@ export default function Players({
 }) {
 
 // below will be replaced with profile data
-const name = ['Pascal','David','Ladina','Andrea'];
-  const currentAvatar = ['muesli','avocado','cookie','waffle'];
   const currentMood = 'good';
 
   return (
