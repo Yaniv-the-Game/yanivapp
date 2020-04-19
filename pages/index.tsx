@@ -168,21 +168,21 @@ const score = useMemo(() => {
         <Players
           profiles={profiles}
           hands={hands}
-          myTurn={currentDealerId === profile.id}
+          myTurn={currentProfileId === profile.id}
           myProfileId={profile.id}
           currentProfileId={currentProfileId}
         />
         <div className='handsarea'>
-        <Table pile={pile} drawCard={drawCard} onToggleDrawCard={onToggleDrawCard} myTurn={currentDealerId === profile.id} />
+        <Table pile={pile} drawCard={drawCard} onToggleDrawCard={onToggleDrawCard} myTurn={currentProfileId === profile.id} />
         {hand && (
           <Hand
             hand={hand}
             cardsToDiscard={cardsToDiscard}
             onToggleCardToDiscard={onToggleCardToDiscard}
-            myTurn={currentDealerId === profile.id}
+            myTurn={currentProfileId === profile.id}
           />
         )}
-        <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} myTurn={currentDealerId === profile.id} />
+        <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} myTurn={currentProfileId === profile.id} />
         </div>
       </div>
       </CSSTransition>
