@@ -13,12 +13,18 @@ export default function Hand({
   onToggleCardToDiscard: (card: string) => void,
   myTurn:boolean,
 }) {
+
+const cardsSelected = Object.values(cardsToDiscard).some(active => active);
+
   if (!hand) {
     return null
   }
 
   return (
     <div className={classnames('HandArea')}>
+
+    {cardsSelected
+      ?
       <div className='selectedcards'>
         {hand.filter(card => cardsToDiscard[card]).map((card) => (
           <div className='card cardSVG selected' key={card} onClick={() => onToggleCardToDiscard(card)}>
@@ -26,6 +32,9 @@ export default function Hand({
           </div>
         ))}
       </div>
+      :
+      <div className='lastMove'>Last move: Andrea took <div className='lastMoveCard'><Card type={'B1'}/></div></div>
+      }
       <div className='cards'>
         {hand.map((card) => (
           <div className='card' key={card} onClick={() => onToggleCardToDiscard(card)}>
@@ -55,6 +64,18 @@ export default function Hand({
         .selectedcards{
           position:relative;
           text-align:center;
+        }
+
+        .lastMoveCard{
+          position:relative;
+          display:inline-block;
+          margin:5px;
+          padding:0;
+          width:16vw;
+          height:24vw;
+          max-width:50px;
+          max-height:75px;
+          vertical-align:middle;
         }
 
         .card{
@@ -99,6 +120,10 @@ export default function Hand({
 
         .disabled{
           display: none;
+        }
+
+        .lastMove{
+          height:100px;
         }
 
       `}</style>
