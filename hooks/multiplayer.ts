@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import useWebSocket from './websocket'
 
 export type LastMove = {
@@ -32,12 +32,28 @@ export function useMultiplayer({
   discardAndDraw: (handId: string, discards: string[], draw: string) => void,
 }) {
   const [connected, setConnected] = useState(false)
-  const [currentProfileId, setCurrentProfileId] = useState(null)
   const [currentDealerId, setDealerId] = useState(null)
   const [playing, setPlaying] = useState(false)
   const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
   const [lastMove, setLastMove] = useState<LastMove>(null)
   const [scores, setScores] = useState([])
+  const currentProfileId = useMemo(() => {
+    if (profiles.length === 0) {
+      return null
+    }
+
+    if (!lastMove) {
+      return profiles[0].id
+    }
+
+    const profileIndex = profiles.findIndex(profile => profile.id === lastMove.profileId)
+    if (profileIndex + 1 >= profiles.length) {
+      return profiles[0].id
+    }
+
+    return profiles[profileIndex + 1].id
+  }, [lastMove, profiles])
+
   // const scores = [
   //   { j2s: 12, xxz: 0, p87: 5 },
   //   { j2s: 12, xxz: 0, p87: 5 },
@@ -72,7 +88,6 @@ export function useMultiplayer({
     setUp(hands, stack)
     // const card = turnUp()
     setLastMove({ profileId: profile.id, type: 'turnUp', card: stack[0] })
-    setCurrentProfileId(profile.id) // TODO get rid of this
     setPlaying(true)
   }, [setUp, turnUp, setLastMove, setPlaying])
 
@@ -83,42 +98,8 @@ export function useMultiplayer({
 
   const onYaniv = useCallback(({ profile }, send) => {
     // TODO check and update game state
-    console.log(`${profile.id} says Yaniv!`)
+    alert(`${profile.id} says Yaniv!`)
   }, [])
-
-  /**
-   * connect through websocket and manage connection
-   */
-  // useEffect(() => {
-  //   const webSocket = new WebSocket(eventsUri)
-  //   webSocket.onopen = () => {
-  //     socket.current = webSocket
-  //     setConnected(true)
-  //   }
-  //   webSocket.onclose = () => {
-  //     setConnected(false)
-  //   }
-  //   webSocket.onerror = () => {
-  //     setConnected(false)
-  //   }
-  //   webSocket.onmessage = ({ data }) => {
-  //     const message = JSON.parse(data)
-
-  //     switch (message.type) {
-  //       case 'hello': onHello(message); break;
-  //       case 'updateProfiles': onUpdateProfiles(message); break;
-  //       case 'start': onStart(message); break;
-  //       case 'play': onPlay(message); break;
-  //       case 'yaniv': onYaniv(message); break;
-  //       default:
-  //     }
-  //   }
-  //   return () => {
-  //     webSocket.close()
-  //     socket.current = null
-  //     setConnected(false)
-  //   }
-  // }, [eventsUri, socket, setConnected])
 
   const onMessage = useCallback((message, send) => {
     switch (message.type) {

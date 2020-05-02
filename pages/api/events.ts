@@ -42,6 +42,12 @@ const eventHandlers = {
       draw,
     }))))
   },
+  async yaniv({ gameId, profile }: { gameId: string, profile: { id: string, name: string, avatar: string } }, context: WebSocketContext) {
+    pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
+      type: 'yaniv',
+      profile,
+    }))))
+  },
 };
 
 /**
