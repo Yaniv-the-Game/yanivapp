@@ -1,17 +1,20 @@
 import React from 'react'
 import classnames from 'classnames'
 import Card from '../components/card'
+import { LastMove } from '../hooks/multiplayer'
 
 export default function Hand({
   hand,
   cardsToDiscard,
   onToggleCardToDiscard,
   myTurn,
+  lastMove,
 }: {
   hand: string[],
   cardsToDiscard: { [card: string]: boolean },
   onToggleCardToDiscard: (card: string) => void,
-  myTurn:boolean,
+  myTurn: boolean,
+  lastMove: LastMove,
 }) {
 
 const cardsSelected = Object.values(cardsToDiscard).some(active => active);
@@ -23,8 +26,7 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
   return (
     <div className={classnames('HandArea')}>
 
-    {cardsSelected
-      ?
+    {cardsSelected ? (
       <div className='selectedcards'>
         {hand.filter(card => cardsToDiscard[card]).map((card) => (
           <div className='card cardSVG selected' key={card} onClick={() => onToggleCardToDiscard(card)}>
@@ -32,9 +34,34 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
           </div>
         ))}
       </div>
-      :
-      <div className='lastMove'>Last move: Andrea took <div className='lastMoveCard'><Card type={'B1'}/></div></div>
-      }
+      ) : (
+        <div className='lastMove'>
+          <span>Last move: </span>
+          {!lastMove ? (
+            <span>none</span>
+          ) : lastMove.type === 'turnUp' ? (
+            <span>
+              <span>{lastMove.profileId} turned up </span>
+              <span className='lastMoveCard'>
+                <Card type={lastMove.card}/>
+              </span>
+            </span>
+          ) : lastMove.type === 'discardAndDraw' ? (
+            <span>
+              <span>{lastMove.profileId} drawn </span>
+              <span className='lastMoveCard'>
+                <Card type={lastMove.draw}/>
+              </span>
+              <span> and discarded </span>
+              {lastMove.discards.map(card => (
+                <span className='lastMoveCard'>
+                  <Card type={card}/>
+                </span>
+              ))}
+            </span>
+          ) : null}
+        </div>
+      )}
       <div className='cards'>
         {hand.map((card) => (
           <div className='card' key={card} onClick={() => onToggleCardToDiscard(card)}>

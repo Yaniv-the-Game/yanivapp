@@ -50,6 +50,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     currentProfileId,
     currentDealerId,
     scores,
+    lastMove,
     start,
     play,
     yaniv,
@@ -76,8 +77,6 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
 
     // start the game with the remaining stack and predefined hand cards
     start({ hands, stack })
-
-
   }, [start, profiles])
 
   const [cardsToDiscard, setCardsToDiscard] = useState({})
@@ -173,13 +172,19 @@ const score = useMemo(() => {
           currentProfileId={currentProfileId}
         />
         <div className='handsarea'>
-        <Table pile={pile} drawCard={drawCard} onToggleDrawCard={onToggleDrawCard} myTurn={currentProfileId === profile.id} />
+        <Table
+          pile={pile}
+          drawCard={drawCard}
+          onToggleDrawCard={onToggleDrawCard}
+          myTurn={currentProfileId === profile.id}
+        />
         {hand && (
           <Hand
             hand={hand}
             cardsToDiscard={cardsToDiscard}
             onToggleCardToDiscard={onToggleCardToDiscard}
             myTurn={currentProfileId === profile.id}
+            lastMove={lastMove}
           />
         )}
         <PlayButton onPlay={onPlay} onYaniv={onYaniv} score={score} cardsToDiscard={cardsToDiscard} myTurn={currentProfileId === profile.id} />

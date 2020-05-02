@@ -119,7 +119,10 @@ export function useYaniv() {
     }
 
     setPile([[stack[0]], ...pile])
-    setStack(stack.slice(1))
+    const cards = stack.slice(1)
+    setStack(cards)
+    console.log(stack, cards, cards[0])
+    return cards[0]
   }, [stack, pile, setPile])
 
   /**

@@ -1,4 +1,16 @@
-import { useCallback, useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import useWebSocket from './websocket'
+
+export type LastMove = {
+  type: 'turnUp',
+  profileId: string,
+  card: string,
+} | {
+  type: 'discardAndDraw',
+  profileId: string,
+  discards: string[],
+  draw: string,
+}
 
 export function useMultiplayer({
   eventsUri,
@@ -16,15 +28,15 @@ export function useMultiplayer({
     avatar: string,
   },
   setUp: (hands: { [profileId: string]: string[] }, stack: string[]) => void,
-  turnUp: () => void,
+  turnUp: () => string,
   discardAndDraw: (handId: string, discards: string[], draw: string) => void,
 }) {
   const [connected, setConnected] = useState(false)
   const [currentProfileId, setCurrentProfileId] = useState(null)
   const [currentDealerId, setDealerId] = useState(null)
   const [playing, setPlaying] = useState(false)
-  const socket = useRef<WebSocket>()
   const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
+  const [lastMove, setLastMove] = useState<LastMove>(null)
   const [scores, setScores] = useState([])
   // const scores = [
   //   { j2s: 12, xxz: 0, p87: 5 },
@@ -32,18 +44,18 @@ export function useMultiplayer({
   //   { j2s: 12, xxz: 0, p87: 5 },
   // ]
 
-  const onHello = useCallback(({ profile }) => {
+  const onHello = useCallback(({ profile }, send) => {
     setProfiles((profiles) => {
       const updated = profiles.find(p => p.id === profile.id)
         ? profiles.map(p => p.id === profile.id ? profile : p)
         : [...profiles, profile]
 
       if (me.id !== profile.id) {
-        socket.current?.send(JSON.stringify({
+        send({
           type: 'updateProfiles',
           gameId,
           profiles: updated,
-        }))
+        })
 
         // TODO also send game state if client isn't synced anymore
       }
@@ -52,22 +64,24 @@ export function useMultiplayer({
     })
   }, [setProfiles])
 
-  const onUpdateProfiles = useCallback(({ profiles }) => {
+  const onUpdateProfiles = useCallback(({ profiles }, send) => {
     setProfiles(profiles)
   }, [setProfiles])
 
-  const onStart = useCallback(({ profile, hands, stack }) => {
+  const onStart = useCallback(({ profile, hands, stack }, send) => {
     setUp(hands, stack)
-    turnUp()
+    // const card = turnUp()
+    setLastMove({ profileId: profile.id, type: 'turnUp', card: stack[0] })
+    setCurrentProfileId(profile.id) // TODO get rid of this
     setPlaying(true)
-    setCurrentProfileId(profile.id)
-  }, [setUp, turnUp, setPlaying])
+  }, [setUp, turnUp, setLastMove, setPlaying])
 
-  const onPlay = useCallback(({ profile, discards, draw }) => {
+  const onPlay = useCallback(({ profile, discards, draw }, send) => {
     discardAndDraw(profile.id, discards, draw)
+    setLastMove({ profileId: profile.id, type: 'discardAndDraw', discards, draw })
   }, [discardAndDraw])
 
-  const onYaniv = useCallback(({ profile }) => {
+  const onYaniv = useCallback(({ profile }, send) => {
     // TODO check and update game state
     console.log(`${profile.id} says Yaniv!`)
   }, [])
@@ -75,48 +89,65 @@ export function useMultiplayer({
   /**
    * connect through websocket and manage connection
    */
-  useEffect(() => {
-    const webSocket = new WebSocket(eventsUri)
-    webSocket.onopen = () => {
-      socket.current = webSocket
-      setConnected(true)
-    }
-    webSocket.onclose = () => {
-      setConnected(false)
-    }
-    webSocket.onerror = () => {
-      setConnected(false)
-    }
-    webSocket.onmessage = ({ data }) => {
-      const message = JSON.parse(data)
+  // useEffect(() => {
+  //   const webSocket = new WebSocket(eventsUri)
+  //   webSocket.onopen = () => {
+  //     socket.current = webSocket
+  //     setConnected(true)
+  //   }
+  //   webSocket.onclose = () => {
+  //     setConnected(false)
+  //   }
+  //   webSocket.onerror = () => {
+  //     setConnected(false)
+  //   }
+  //   webSocket.onmessage = ({ data }) => {
+  //     const message = JSON.parse(data)
 
-      switch (message.type) {
-        case 'hello': onHello(message); break;
-        case 'updateProfiles': onUpdateProfiles(message); break;
-        case 'start': onStart(message); break;
-        case 'play': onPlay(message); break;
-        case 'yaniv': onYaniv(message); break;
-        default:
-      }
-    }
-    return () => {
-      webSocket.close()
-      socket.current = null
-      setConnected(false)
-    }
-  }, [eventsUri, socket, setConnected, socket, onPlay])
+  //     switch (message.type) {
+  //       case 'hello': onHello(message); break;
+  //       case 'updateProfiles': onUpdateProfiles(message); break;
+  //       case 'start': onStart(message); break;
+  //       case 'play': onPlay(message); break;
+  //       case 'yaniv': onYaniv(message); break;
+  //       default:
+  //     }
+  //   }
+  //   return () => {
+  //     webSocket.close()
+  //     socket.current = null
+  //     setConnected(false)
+  //   }
+  // }, [eventsUri, socket, setConnected])
 
-  useEffect(() => {
-    if (!connected) {
-      return
+  const onMessage = useCallback((message, send) => {
+    switch (message.type) {
+      case 'hello': onHello(message, send); break;
+      case 'updateProfiles': onUpdateProfiles(message, send); break;
+      case 'start': onStart(message, send); break;
+      case 'play': onPlay(message, send); break;
+      case 'yaniv': onYaniv(message, send); break;
+      default:
     }
+  }, [onHello, onUpdateProfiles, onStart, onPlay, onYaniv])
 
-    socket.current?.send(JSON.stringify({
+  const onConnect = useCallback((socket) => {
+    socket.send(JSON.stringify({
       type: 'hello',
       gameId,
       profile: me,
     }))
-  }, [connected, me, socket])
+  }, [gameId, me])
+
+  const send = useWebSocket({ eventsUri, onMessage, onConnect })
+
+  useEffect(() => {
+    send({
+      type: 'hello',
+      gameId,
+      profile: me,
+    })
+  }, [send, gameId, me])
 
   const start = useCallback(({
     hands,
@@ -125,14 +156,14 @@ export function useMultiplayer({
     hands: { [profileId: string]: string[] },
     stack: string[]
   }) => {
-    socket.current?.send(JSON.stringify({
+    send({
       type: 'start',
       gameId,
       profile: me,
       hands,
       stack,
-    }))
-  }, [socket])
+    })
+  }, [send, gameId, me])
 
   const play = useCallback(({
     discards,
@@ -141,22 +172,22 @@ export function useMultiplayer({
     discards: string[],
     draw: string,
   }) => {
-    socket.current?.send(JSON.stringify({
+    send({
       type: 'play',
       gameId,
       profile: me,
       discards,
       draw,
-    }))
-  }, [socket])
+    })
+  }, [send, gameId, me])
 
   const yaniv = useCallback(() => {
-    socket.current?.send(JSON.stringify({
+    send({
       type: 'yaniv',
       gameId,
       profile: me,
-    }))
-  }, [socket])
+    })
+  }, [send, gameId, me])
 
   return {
     connected,
@@ -166,6 +197,7 @@ export function useMultiplayer({
     currentProfileId,
     currentDealerId,
     scores,
+    lastMove,
     start,
     play,
     yaniv,
