@@ -59,6 +59,8 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
                 </span>
               ))}
             </span>
+          ) : lastMove.type === 'yaniv' ? (
+            <span>{lastMove.profileId} said yaniv!</span>
           ) : null}
         </div>
       )}

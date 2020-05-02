@@ -10,6 +10,9 @@ export type LastMove = {
   profileId: string,
   discards: string[],
   draw: string,
+} | {
+  type: 'yaniv',
+  profileId: string,
 }
 
 export function useMultiplayer({
@@ -97,8 +100,7 @@ export function useMultiplayer({
   }, [discardAndDraw])
 
   const onYaniv = useCallback(({ profile }, send) => {
-    // TODO check and update game state
-    alert(`${profile.id} says Yaniv!`)
+    setLastMove({ profileId: profile.id, type: 'yaniv' })
   }, [])
 
   const onMessage = useCallback((message, send) => {
