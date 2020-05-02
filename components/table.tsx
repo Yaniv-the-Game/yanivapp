@@ -79,6 +79,13 @@ export default function Table({
           box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.48);
 
         }
+
+        @media only screen and (min-width: 600px) {
+          .card {
+            max-width:120px;
+            max-height:180px;
+          }
+        }
       `}</style>
     </div>
   )

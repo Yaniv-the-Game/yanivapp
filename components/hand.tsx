@@ -153,6 +153,13 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
           height:100px;
         }
 
+        @media only screen and (min-width: 600px) {
+          .card {
+            max-width:120px;
+            max-height:180px;
+          }
+        }
+
       `}</style>
     </div>
   )
