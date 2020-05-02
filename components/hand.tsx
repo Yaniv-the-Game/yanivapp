@@ -52,12 +52,6 @@ const cardsSelected = Object.values(cardsToDiscard).some(active => active);
               <span className='lastMoveCard'>
                 <Card type={lastMove.draw}/>
               </span>
-              <span> and discarded </span>
-              {lastMove.discards.map(card => (
-                <span className='lastMoveCard'>
-                  <Card type={card}/>
-                </span>
-              ))}
             </span>
           ) : lastMove.type === 'yaniv' ? (
             <span>{lastMove.profileId} said yaniv!</span>

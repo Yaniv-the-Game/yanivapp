@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState} from 'react'
 import Avatar from '../components/avatar'
+import classnames from 'classnames'
+
 
 export default function Players({
   profiles,
@@ -18,8 +20,17 @@ export default function Players({
 // below will be replaced with profile data
   const currentMood = 'good';
 
+  const [showStats, setShowStats] = useState(false);
+
+
+  const scores = [
+     { '4r4p': 321, xxz: 0, p87: 5 },
+     { '4r4p': 12, xxz: 0, p87: 5 },
+     { '4r4p': 22, xxz: 0, p87: 5 },
+   ]
+
   return (
-    <div className='header'>
+    <div className='header' onClick={()=>setShowStats(!showStats)}>
       {profiles.map((profile) => (
         <div key={profile.id} className='profile'>
           <div className='cardIndicators'>
@@ -32,6 +43,23 @@ export default function Players({
             <div className="avatarForeground">
               <Avatar name={profile.avatar} mood={currentMood} size={56} />
             </div>
+          </div>
+          <div className={classnames('scores',{hide: !showStats})}>
+          <table>
+          {scores.map((round) => (
+            <tr>
+            {profiles.map((profile) => (
+              <th>{round[profile.id]}</th>
+            ))}
+            </tr>
+            ))}
+          </table>
+
+
+
+
+
+
           </div>
           <div>
             <p>{profile.name}</p>
@@ -108,6 +136,21 @@ export default function Players({
           display: inline-block;
           text-align:center;
           margin-right:15px;
+        }
+
+        .scores{
+          position:fixed;
+          height:100vh;
+          background: red;
+          z-index:100;
+          top:118px;
+          left:0;
+          width:100%;
+          background: #A9C3A6;
+        }
+
+        .hide{
+          display: none;
         }
 
         @media only screen and (min-width: 600px) {
