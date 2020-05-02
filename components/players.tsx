@@ -109,6 +109,13 @@ export default function Players({
           text-align:center;
           margin-right:15px;
         }
+
+        @media only screen and (min-width: 600px) {
+          .header {
+            padding-top: 0;
+          }
+}
+
       `}</style>
     </div>
   )
