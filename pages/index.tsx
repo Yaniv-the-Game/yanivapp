@@ -14,9 +14,7 @@ import Table from '../components/table'
 import PlayButton from '../components/play-button'
 import EditProfile from '../components/edit-profile'
 
-
 const useProfileState = createPersistedState('profile');
-
 const generateGameId = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 3)
 const generateProfileId = customAlphabet('23456789abcdefghjkmnpqrstuvwxyz', 4)
 
@@ -29,8 +27,10 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
 
   const [gameId, setGameId] = useState(initialGameId)
 
+  /**
+   * update the URL if setGameId is used to switch to another game
+   */
   useEffect(() => {
-    // update the URL if setGameId is used to switch to another game
     Router.replace('/index', `/?game=${gameId}`, { shallow: true })
   }, [gameId])
 
@@ -133,9 +133,9 @@ const score = useMemo(() => {
           <h1>The Worlds greatest game {connected ? 'Online' : 'Offline'}</h1>
           <p>Send your friends this link to join the game:</p>
           <div className="share">
-            <a className='gamelink' href={`https://yanivapp.now.sh/?game=${gameId}`}>yanivapp.now.sh/?game={gameId}</a>
+            <a className='gamelink' href={`${baseUri}/?game=${gameId}`}>{baseUri.split('://')[1]}/?game={gameId}</a>
             <div className="Whatsapp">
-              <a className='whatsapplink' href={`https://wa.me/?text=Let%27s%20play%20yaniv%21%20Join%20on%20https%3A%2F%2Fyanivapp.now.sh/?game=${gameId}`}>
+              <a className='whatsapplink' href={`https://wa.me/?text=Let%27s%20play%20yaniv%21%20Join%20on%20${encodeURIComponent(`${baseUri}/?game=${gameId}`)}`}>
                 <img src='/img/whatsapp.png' className="whatsappimage" alt="Share on Whatsapp" height="25px" width="25px" />
                 <span>Share on WhatsApp</span>
               </a>
