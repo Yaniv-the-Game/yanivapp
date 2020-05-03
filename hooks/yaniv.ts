@@ -109,6 +109,15 @@ export function useYaniv() {
   const [pile, setPile] = useState<string[][]>([])
 
   /**
+   * restore the game by providing the hand, stack and pile cards
+   */
+  const restore = useCallback((hands: { [handId: string]: string[]}, stack: string[], pile: string[][]) => {
+    setHands(hands)
+    setStack(stack)
+    setPile(pile)
+  }, [setHands, setStack, setPile])
+
+  /**
    * set up the game by providing the hands and stack cards
    */
   const setUp = useCallback((hands: { [handId: string]: string[]}, stack: string[]) => {
@@ -184,6 +193,7 @@ export function useYaniv() {
     hands,
     pile,
     stack,
+    restore,
     setUp,
     turnUp,
     // restock,

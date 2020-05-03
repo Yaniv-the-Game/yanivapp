@@ -34,21 +34,23 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     Router.replace('/index', `/?game=${gameId}`, { shallow: true })
   }, [gameId])
 
+  /**
+   * manage the Yaniv game state locally
+   */
   const {
     hands,
     pile,
     stack,
+    restore,
     setUp,
     turnUp,
     discardAndDraw,
   } = useYaniv()
 
   const {
-    connected,
-    playing,
+    connected, // TODO: remove this
     profiles,
     currentProfileId,
-    currentDealerId,
     scores,
     lastMove,
     start,
@@ -58,15 +60,18 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     eventsUri,
     gameId: gameId,
     me: profile,
+    restore,
     setUp,
     turnUp,
     discardAndDraw,
+    hands,
+    stack,
+    pile,
   })
 
   const hand = useMemo(() => {
     return hands[profile.id]
   }, [hands, profile])
-
 
   const onStart = useCallback(() => {
     // shuffle a complete deck and use it as our stack
@@ -121,7 +126,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         <title>yaniv!</title>
       </Head>
       <CSSTransition
-        in={!playing}
+        in={!lastMove}
         timeout={300}
         mountOnEnter
         unmountOnExit
@@ -156,7 +161,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         </div>
       </CSSTransition>
       <CSSTransition
-        in={playing}
+        in={lastMove}
         timeout={300}
         mountOnEnter
         unmountOnExit

@@ -20,10 +20,15 @@ const eventHandlers = {
       profile,
     }))))
   },
-  async updateProfiles({ gameId, profiles }: { gameId: string, profiles: { id: string, name: string, avatar: string }[] }, context: WebSocketContext) {
+  async sync({ gameId, profiles, scores, lastMove, hands, stack, pile }: { gameId: string, profiles: { id: string, name: string, avatar: string }[], scores: { [profileId: string]: number }, lastMove: {}, hands: { [profileId: string]: string[] }, stack: string[], pile: string[][] }, context: WebSocketContext) {
     pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
-      type: 'updateProfiles',
+      type: 'sync',
       profiles,
+      scores,
+      lastMove,
+      hands,
+      stack,
+      pile,
     }))))
   },
   async start({ gameId, profile, hands, stack }: { gameId: string, profile: { id: string, name: string, avatar: string }, hands: { [profileId: string]: string[] }, stack: string[] }, context: WebSocketContext) {

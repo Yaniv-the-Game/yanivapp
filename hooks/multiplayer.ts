@@ -20,10 +20,13 @@ export function useMultiplayer({
   eventsUri,
   gameId,
   me,
+  restore,
   setUp,
   turnUp,
   discardAndDraw,
   hands,
+  stack,
+  pile,
 }: {
   eventsUri: string,
   gameId: string | null,
@@ -32,14 +35,16 @@ export function useMultiplayer({
     name: string,
     avatar: string,
   },
+  restore: (hands: { [handId: string]: string[]}, stack: string[], pile: string[][]) => void,
   setUp: (hands: { [profileId: string]: string[] }, stack: string[]) => void,
   turnUp: () => string,
   discardAndDraw: (handId: string, discards: string[], draw: string) => void,
   hands: { [profileId: string]: string[] },
+  stack: string[],
+  pile: string[][],
 }) {
   const [connected, setConnected] = useState(false)
   const [currentDealerId, setDealerId] = useState(null)
-  const [playing, setPlaying] = useState(false)
   const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
   const [lastMove, setLastMove] = useState<LastMove>(null)
   const [scores, setScores] = useState<{ [profileId: string]: number }[]>([])
@@ -61,35 +66,36 @@ export function useMultiplayer({
   }, [lastMove, profiles])
 
   const onHello = useCallback(({ profile }, send) => {
-    setProfiles((profiles) => {
-      const updated = profiles.find(p => p.id === profile.id)
-        ? profiles.map(p => p.id === profile.id ? profile : p)
-        : [...profiles, profile]
+    const updatedProfiles = profiles.find(p => p.id === profile.id)
+      ? profiles.map(p => p.id === profile.id ? profile : p)
+      : [...profiles, profile]
 
-      if (me.id !== profile.id) {
-        send({
-          type: 'updateProfiles',
-          gameId,
-          profiles: updated,
-        })
+    if (me.id !== profile.id) {
+      send({
+        type: 'sync',
+        gameId,
+        profiles: updatedProfiles,
+        scores,
+        lastMove,
+        hands,
+        stack,
+        pile,
+      })
+    }
+  }, [me, profiles, scores, lastMove, hands, stack, pile])
 
-        // TODO also send game state if client isn't synced anymore
-      }
-
-      return updated
-    })
-  }, [setProfiles])
-
-  const onUpdateProfiles = useCallback(({ profiles }, send) => {
+  const onSync = useCallback(({ profiles, scores, lastMove, hands, stack, pile }, send) => {
     setProfiles(profiles)
-  }, [setProfiles])
+    setScores(scores)
+    setLastMove(lastMove)
+    restore(hands, stack, pile)
+  }, [restore])
 
   const onStart = useCallback(({ profile, hands, stack }, send) => {
     setUp(hands, stack)
     // const card = turnUp()
     setLastMove({ profileId: profile.id, type: 'turnUp', card: stack[0] })
-    setPlaying(true)
-  }, [setUp, turnUp, setLastMove, setPlaying])
+  }, [setUp, turnUp, setLastMove])
 
   const onPlay = useCallback(({ profile, discards, draw }, send) => {
     discardAndDraw(profile.id, discards, draw)
@@ -142,13 +148,13 @@ export function useMultiplayer({
   const onMessage = useCallback((message, send) => {
     switch (message.type) {
       case 'hello': onHello(message, send); break;
-      case 'updateProfiles': onUpdateProfiles(message, send); break;
+      case 'sync': onSync(message, send); break;
       case 'start': onStart(message, send); break;
       case 'play': onPlay(message, send); break;
       case 'yaniv': onYaniv(message, send); break;
       default:
     }
-  }, [onHello, onUpdateProfiles, onStart, onPlay, onYaniv])
+  }, [onHello, onStart, onPlay, onYaniv])
 
   const onConnect = useCallback((socket) => {
     socket.send(JSON.stringify({
@@ -210,7 +216,6 @@ export function useMultiplayer({
 
   return {
     connected,
-    playing,
     gameId,
     profiles,
     currentProfileId,
