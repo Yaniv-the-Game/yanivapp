@@ -44,7 +44,7 @@ export function useMultiplayer({
   pile: string[][],
 }) {
   const [connected, setConnected] = useState(false)
-  const [currentDealerId, setDealerId] = useState(null)
+  const [dealerId, setDealerId] = useState(null)
   const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
   const [lastMove, setLastMove] = useState<LastMove>(null)
   const [scores, setScores] = useState<{ [profileId: string]: number }[]>([])
@@ -75,6 +75,7 @@ export function useMultiplayer({
         type: 'sync',
         gameId,
         profiles: updatedProfiles,
+        dealerId,
         scores,
         lastMove,
         hands,
@@ -82,10 +83,11 @@ export function useMultiplayer({
         pile,
       })
     }
-  }, [me, profiles, scores, lastMove, hands, stack, pile])
+  }, [me, profiles, dealerId, scores, lastMove, hands, stack, pile])
 
-  const onSync = useCallback(({ profiles, scores, lastMove, hands, stack, pile }, send) => {
+  const onSync = useCallback(({ profiles, dealerId, scores, lastMove, hands, stack, pile }, send) => {
     setProfiles(profiles)
+    setDealerId(dealerId)
     setScores(scores)
     setLastMove(lastMove)
     restore(hands, stack, pile)
@@ -93,7 +95,7 @@ export function useMultiplayer({
 
   const onStart = useCallback(({ profile, hands, stack }, send) => {
     setUp(hands, stack)
-    // const card = turnUp()
+    setDealerId(profile.id)
     setLastMove({ profileId: profile.id, type: 'turnUp', card: stack[0] })
   }, [setUp, turnUp, setLastMove])
 
@@ -131,7 +133,15 @@ export function useMultiplayer({
 
     setLastMove({ profileId: profile.id, type: 'yaniv' })
     setScores(scores => [...scores, newScores])
-  }, [hands, scores, profiles])
+
+    // TODO: do not let dropped out profiles deal anymore
+    const dealerIndex = profiles.findIndex(profile => profile.id === dealerId)
+    if (dealerIndex + 1 >= profiles.length) {
+      setDealerId(profiles[0].id)
+    } else {
+      setDealerId(profiles[dealerIndex + 1].id)
+    }
+  }, [hands, scores, profiles, dealerId])
 
   const onMessage = useCallback((message, send) => {
     switch (message.type) {
@@ -207,7 +217,7 @@ export function useMultiplayer({
     gameId,
     profiles,
     currentProfileId,
-    currentDealerId,
+    dealerId,
     scores,
     lastMove,
     start,

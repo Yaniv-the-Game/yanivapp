@@ -20,10 +20,11 @@ const eventHandlers = {
       profile,
     }))))
   },
-  async sync({ gameId, profiles, scores, lastMove, hands, stack, pile }: { gameId: string, profiles: { id: string, name: string, avatar: string }[], scores: { [profileId: string]: number }, lastMove: {}, hands: { [profileId: string]: string[] }, stack: string[], pile: string[][] }, context: WebSocketContext) {
+  async sync({ gameId, profiles, dealerId, scores, lastMove, hands, stack, pile }: { gameId: string, profiles: { id: string, name: string, avatar: string }[], dealerId: string, scores: { [profileId: string]: number }, lastMove: {}, hands: { [profileId: string]: string[] }, stack: string[], pile: string[][] }, context: WebSocketContext) {
     pub.publish(gameId, new Item(new WebSocketMessageFormat(JSON.stringify({
       type: 'sync',
       profiles,
+      dealerId,
       scores,
       lastMove,
       hands,

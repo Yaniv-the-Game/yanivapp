@@ -51,6 +51,7 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
     connected, // TODO: remove this
     profiles,
     currentProfileId,
+    dealerId,
     scores,
     lastMove,
     start,
@@ -167,6 +168,9 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
         unmountOnExit
       >
       <div className='playground'>
+        {lastMove && lastMove.type === 'yaniv' && dealerId === profile.id && (
+          <button onClick={onStart}>start another round</button>
+        )}
         <Players
           profiles={profiles}
           hands={hands}
