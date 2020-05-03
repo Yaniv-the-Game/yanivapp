@@ -103,19 +103,17 @@ export default function IndexPage({ initialGameId, baseUri, eventsUri }) {
 
   }, [cardsToDiscard, setCardsToDiscard, stack, drawCard, setDrawCard, play, pile])
 
-  const [myTurn, setMyTurn] = useState(false);
-
-   // TODO call onYaniv() to signal Yaniv!
   const onYaniv = useCallback(() => {
-    console.log("Yaniv!")
     yaniv()
   }, [yaniv])
 
-// TODO callculate current score for this user at hand
-const score = useMemo(() => {
-  if(!hand){return null}
-  return  hand.map(card => inspect(card).value).reduce((total, value)=>total+value,0);
-},[hand])
+  const score = useMemo(() => {
+    if (!hand) {
+      return null
+    }
+
+    return  hand.map(card => inspect(card).value).reduce((total, value) => total + value, 0);
+  },[hand])
 
   return (
     <div className='yaniv'>
@@ -170,6 +168,7 @@ const score = useMemo(() => {
           myTurn={currentProfileId === profile.id}
           myProfileId={profile.id}
           currentProfileId={currentProfileId}
+          scores={scores}
         />
         <div className='handsarea'>
         <Table

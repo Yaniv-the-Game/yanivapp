@@ -9,25 +9,20 @@ export default function Players({
   myTurn,
   myProfileId,
   currentProfileId,
+  scores,
 }: {
   profiles: { id: string, name: string, avatar: string }[],
   hands: { [profileId: string]: string[] },
   myTurn: boolean,
   currentProfileId: string,
   myProfileId: string,
+  scores: { [profileId: string]: number }[],
 }) {
 
 // below will be replaced with profile data
   const currentMood = 'good';
 
   const [showStats, setShowStats] = useState(false);
-
-
-  const scores = [
-     { '4r4p': 321, xxz: 0, p87: 5 },
-     { '4r4p': 12, xxz: 0, p87: 5 },
-     { '4r4p': 22, xxz: 0, p87: 5 },
-   ]
 
   return (
     <div className='header' onClick={()=>setShowStats(!showStats)}>

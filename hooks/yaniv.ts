@@ -36,6 +36,16 @@ const order = '0123456789XJQK'
 const orderMap = order.split('').reduce((m, v, i) => ({ ...m, [v]: i }), {})
 
 /**
+ * calculate the value of a set of cards
+ *
+ * @param cards set of two letter codes of cards to be values
+ */
+export function valueCards(cards: string[]) {
+  const infos = cards.map(inspect)
+  return infos.reduce((total, card) => total + card.value, 0)
+}
+
+/**
  * order a set of cards according to their rank,
  * needed when discarding multiple consecutive cards
  * at once

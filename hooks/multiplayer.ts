@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
+import { valueCards } from './yaniv'
 import useWebSocket from './websocket'
 
 export type LastMove = {
@@ -22,6 +23,7 @@ export function useMultiplayer({
   setUp,
   turnUp,
   discardAndDraw,
+  hands,
 }: {
   eventsUri: string,
   gameId: string | null,
@@ -33,13 +35,14 @@ export function useMultiplayer({
   setUp: (hands: { [profileId: string]: string[] }, stack: string[]) => void,
   turnUp: () => string,
   discardAndDraw: (handId: string, discards: string[], draw: string) => void,
+  hands: { [profileId: string]: string[] },
 }) {
   const [connected, setConnected] = useState(false)
   const [currentDealerId, setDealerId] = useState(null)
   const [playing, setPlaying] = useState(false)
   const [profiles, setProfiles] = useState<{ id: string, name: string, avatar: string }[]>([])
   const [lastMove, setLastMove] = useState<LastMove>(null)
-  const [scores, setScores] = useState([])
+  const [scores, setScores] = useState<{ [profileId: string]: number }[]>([])
   const currentProfileId = useMemo(() => {
     if (profiles.length === 0) {
       return null
@@ -56,12 +59,6 @@ export function useMultiplayer({
 
     return profiles[profileIndex + 1].id
   }, [lastMove, profiles])
-
-  // const scores = [
-  //   { j2s: 12, xxz: 0, p87: 5 },
-  //   { j2s: 12, xxz: 0, p87: 5 },
-  //   { j2s: 12, xxz: 0, p87: 5 },
-  // ]
 
   const onHello = useCallback(({ profile }, send) => {
     setProfiles((profiles) => {
@@ -100,8 +97,47 @@ export function useMultiplayer({
   }, [discardAndDraw])
 
   const onYaniv = useCallback(({ profile }, send) => {
+    const values = Object.entries(hands).reduce<{ [profileId: string]: number }>((values, [profileId, hand]) => ({
+      ...values,
+      [profileId]: valueCards(hand),
+    }), {})
+
+    console.log('values', values)
+
+    const lowestOtherValue = Object.entries(values)
+      .filter(([profileId]) => profileId !== profile.id)
+      .map(([, value]) => value)
+      .reduce<number>((lowest, value) => value < lowest ? value : lowest, Infinity)
+
+    console.log('lowestOtherValue', lowestOtherValue)
+
+    if (values[profile.id] < lowestOtherValue) {
+      // it's a valid Yaniv, so we write zero points for the winner
+      values[profile.id] = 0
+    } else {
+      // it's an invalid Yaniv, so we punish caller with +25 points
+      values[profile.id] += 25
+    }
+
+    console.log('values', values)
+
+    const previousScores = scores.length > 0 ? scores[scores.length - 1] : {}
+
+    console.log('previousScores', previousScores)
+
+    const newScores = profiles.reduce<{ [profileId: string]: number }>((scores, profile) => ({
+      ...scores,
+      [profile.id]: (previousScores[profile.id] || 0) + (values[profile.id] || 0),
+    }), {})
+
+    console.log('scores', scores)
+    console.log('newScores', newScores)
+
+    // TODO: apply halvings / resets
+
     setLastMove({ profileId: profile.id, type: 'yaniv' })
-  }, [])
+    setScores(scores => [...scores, newScores])
+  }, [hands, scores, profiles])
 
   const onMessage = useCallback((message, send) => {
     switch (message.type) {
