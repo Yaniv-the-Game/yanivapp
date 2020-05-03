@@ -108,14 +108,10 @@ export function useMultiplayer({
       [profileId]: valueCards(hand),
     }), {})
 
-    console.log('values', values)
-
     const lowestOtherValue = Object.entries(values)
       .filter(([profileId]) => profileId !== profile.id)
       .map(([, value]) => value)
       .reduce<number>((lowest, value) => value < lowest ? value : lowest, Infinity)
-
-    console.log('lowestOtherValue', lowestOtherValue)
 
     if (values[profile.id] < lowestOtherValue) {
       // it's a valid Yaniv, so we write zero points for the winner
@@ -125,19 +121,11 @@ export function useMultiplayer({
       values[profile.id] += 25
     }
 
-    console.log('values', values)
-
     const previousScores = scores.length > 0 ? scores[scores.length - 1] : {}
-
-    console.log('previousScores', previousScores)
-
     const newScores = profiles.reduce<{ [profileId: string]: number }>((scores, profile) => ({
       ...scores,
       [profile.id]: (previousScores[profile.id] || 0) + (values[profile.id] || 0),
     }), {})
-
-    console.log('scores', scores)
-    console.log('newScores', newScores)
 
     // TODO: apply halvings / resets
 
